@@ -9,7 +9,7 @@ permalink: docs/MSA/WhatisMicroservices
 
 ## MSA의 장점
 
-1. [빠른 Delivery](docs/MSA/WhatisMicroservices/빠른 Delivery)
+1. 빠른 Delivery
 2. Polyglot Architecture 지원
 3. 실험과 혁신 가능
 4. 탄력적이고 선택적인 확장
