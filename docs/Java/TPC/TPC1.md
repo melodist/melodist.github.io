@@ -211,13 +211,12 @@ ex. object는 class의 instance다.
 
 private 접근 제어자 (Access Modifier)를 사용한 메소드는 다른 객체가 접근할 수 없다.
 
-```
-|접근자|클래스 내부|패키지|상속받은 클래스|이외의 영역|
+| 접근자       | 클래스 내부 | 패키지     | 상속받은 클래스| 이외의 영역 |
+|-------------|:----------:|:----------:|:------------:|:-----------:|
 |private|O|X|X|X|
 |default(생략)|O|O|X|X|
 |protected|O|O|O|X|
 |public|O|O|O|O|
-```
 
 private 멤버변수에 접근하기 위해서 setter, getter 메소드를 이용한다.
 
