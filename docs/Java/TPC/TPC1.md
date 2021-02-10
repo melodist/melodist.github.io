@@ -1,9 +1,9 @@
 ---
 layout: default
-title: 1
+title: PART-1
 parent: Java TPC(생각하고, 표현하고, 코딩하고)
 grand_parent: Java
-permalink: docs/Java/TPC/1
+permalink: docs/Java/TPC/PART-1
 ---
 
 ## 자바의 구동방식(JVM)
@@ -204,3 +204,93 @@ instance: 메모리에 할당된 구체적인 실체, 원본(추상적인 개념
 ex. object는 class의 instance다.
 
 * Eclipse에서 `Alt+Shift+S` 이용하여 생성자를 자동으로 생성할 수 있다.
+
+## 잘 설계된 클래스(Model: DTO, DAO, Utility)
+
+### 정보은닉(private)
+
+private 접근 제어자 (Access Modifier)를 사용한 메소드는 다른 객체가 접근할 수 없다.
+
+```
+|접근자|클래스 내부|패키지|상속받은 클래스|이외의 영역|
+|private|O|X|X|X|
+|default(생략)|O|O|X|X|
+|protected|O|O|O|X|
+|public|O|O|O|O|
+```
+
+private 멤버변수에 접근하기 위해서 setter, getter 메소드를 이용한다.
+
+setter로 값을 저장하고 getter로 얻어온다.
+
+Eclipse에서는 `Alt+Shift+S`에서 나오는 메뉴를 통하여 편리하게 getter와 setter를 생성할 수 있다.
+
+### 잘 설계된 DTO, VO 클래스
+
+1. private으로 객체의 상태를 보호한다. -> 정보은닉(information hiding)
+2. 디폴트 생성자를 명시적으로 만들고 오버로딩 생성자를 만들어 적절하게 초기화한다.
+   - 객체를 생성하는 작업은 생성자 내부에서 JVM이 자동으로 처리한다.
+3. private으로 만들어진 멤버변수에 접근하기 위하여 setter, getter 메소드를 만든다.
+   - setter 메소드의 역할: DI(Dependency Injection: 종속객체 주입), 객체 내부에서 생성된 변수의 값을 외부에서 할당한다.
+
+4. 객체가 가지고 있는 값 전체를 출력하기 위한 toString() 메소드를 재정의한다.
+
+## 메서드의 오버로딩(Method Overloading)
+
+같은 이름의 메소드를 여러 개 가지면서 매개변수의 유형과 개수가 다르도록 하는 기술
+
+- 메서드의 signature가 다르면 된다. (signature: 매개변수의 DataType, 개수)
+
+기능이 비슷하고 매개변수의 유형만 다를 경우 이름이 다른 여러 개의 메소드를 만들 필요가 없으므로 오버로딩을 이용한다.
+
+```java
+public class OverLoad{
+	public void sum(int a, int b){
+		System.out.println(a+b);
+	}
+    
+	public void sum(float a, int b){
+		System.out.println(a+b);
+	}
+    
+	public void sum(float a, float b){
+		System.out.println(a+b);
+	}
+}
+```
+
+오버로딩은 정적 바인딩을 이용하므로 프로그램 실행 속도와는 관계가 없다.
+
+- 정적 바인딩: 컴파일 시간에 호출될 함수로 점프할 주소가 결정되는 것.
+
+## 동일한 구조, 이질적인 구조(배열 VS 클래스의 관계)
+
+배열과 클래스 모두 데이터를 담는 객체이다.
+
+배열(Array): 동일한 형태의 데이터를 저장하는 구조
+
+클래스(Class): 서로 다른(이질적인) 형태의 데이터를 저장하는 구조
+
+## 학습정리(우리가 사용하는 클래스의 종류들)
+
+### Class
+
+- DataType 측면: 새로운 자료형을 만드는(설계하는) 도구 = **모델링**도구
+- OOP(객체지향) 측면: 객체의 상태정보와 행위정보를 추출하여 **캡슐화**하는 도구
+
+Model: class를 model이라고도 부른다.
+
+### 사용자가 직접 만드는 model의 종류
+
+1. DTO(Data Transfer Object): 데이터 구조 , 데이터를 담는 역할 , 이동하기위해서 데이터를 담는다.
+- VO(Value Object) : 객체를 담아서 하나의 값 덩어리 으로 취급한다는 의미
+2. DAO(Data Access Object): 데이터를 처리하는 역할(비즈니스 로직), 데이터베이스와 CRUD 하는 역할
+  - CRUD(Create, Read, Update, Delete): 대부분의 소프트웨어가 가지는 기본적인 데이터 처리 기능
+3. Utility(Helper Object): 도움을 주는 기능을 제공하는 역할(날짜 , 시간 , 통화 , 인코딩 등)
+
+### 앞으로 사용하게 될 class: API(Application Programming Interface)
+
+1. Java에서 직접 제공하는 class: String, System, Integer, ArrayList, Map ...
+2. 사용자가 직접 만드는 class: DTO, DAO, Utility
+3. 1, 2번 이외의 class: Gson, Jsoup, POI, iText ...
+
