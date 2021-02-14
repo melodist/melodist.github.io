@@ -193,3 +193,99 @@ public interface RemoCon{ // 인터페이스
 -  implements 키워드 사용
 - Java는 단일상속만을 지원하는 것이 원칙이지만 인터페이스는 다중상속 형태를 지원한다.
 - 추상 메소드와 final static 변수(상수)만을 멤버로 가질 수 있다.
+
+## 인터페이스(규약)와 JDBC의 관계
+
+- JDBC(Java DataBase Connectivity):  JDBC는 자바에서 데이터베이스에 접속할 수 있도록 하는 자바 API이다.
+
+- Java 개발자는 Java에서 제공하는 JDBC 인터페이스를 통하여 Oracle, MySQL, MSSQL 등의 데이터베이스에 동일한 메서드를 이용하여 접근할 수 있다. 따라서, 밴더 별로 데이터베이스 접속방법, CRUD 동작방법 등이 다르지만 개발자는 구현 내용에 대하여 알 필요가 없다.
+- DBMS와 통신을 담당하는 Java 클래스를 JDBC 드라이버라고 한다.
+
+## 인터페이스의 상속관계
+
+1. 인터페이스와 인터페이스의 상속관계
+
+   ```java
+   public interface A{
+   	public void m();
+   }
+   
+   public interface B extends A{
+   	public void z();
+   }
+   
+   public class X implements B{
+   	public void m() {
+   	}
+   	
+   	public void z() {
+   	}
+   }
+   ```
+
+클래스가 여러 개의 인터페이스를 상속받았을 경우 모든 메소드를 구현해야 한다.
+
+2. 다중상속관계에 있는 클래스 구조
+
+```java
+public class Dog extends Animal implements Pet, Robots
+```
+
+클래스는 단일 상속만 가능하지만 인터페이스는 다중 상속이 가능하다.
+
+## Object 클래스는 신이야!
+
+### Object 클래스
+
+모든 클래스의 root 클래스
+
+- 상속 관계에서 최상위 클래스 (기본적으로 `extends Object`가 생략되어 있음)
+- Object 클래스를 잘 활용하면 프로그램을 유연하게 만들 수 있다.
+
+#### Object 클래스를 이용한 객체 생성
+
+```java
+Object obj = new A();
+A a = (A)obj;
+a.display();
+System.out.println(obj.toString());
+```
+
+`toString()`
+
+1. 재정의를 안 했을 경우 번지 출력
+2. 재정의를 했을 경우 재정의된 메소드 실행
+
+## Object 클래스의 활용
+
+1. 다형성 인수: 부모 클래스를 매개변수로 받는 메소드를 만들어 다형성을 보장한다.
+2. 다형성 배열: 각각의 공간에 타입이 다른 클래스를 저장할 수 있다.
+
+## 학습정리(객체지향 3대 특징)
+
+### 객체지향 프로밍의 3대 특징
+
+1. 정보은닉(Information Hiding)
+2. 상속(Inheritance)
+3. 다형성(Polymorphism)
+
+### Message polymorphism(다형성)
+
+상속 관계에 있는 클래스에서 상위 클래스가 동일한 메시지로 하위 클래스들을 서로 다르게 동작시키는 객체지향 원리(개념)
+
+### 다형성 이론의 전제 조건
+
+1. 상속관계가 되어야 한다.
+2. 객체생성을 upcasting으로 해야 한다.
+   - 상위 클래스가 하위 클래스에게 메시지를 보내야 하므로
+   - upcasting이 되면 downcasting을 할 수 있다.
+3. 하위 클래스가 반드시 재정의(override)해야 한다.
+4. 실행 시점에서 사용할 메서드가 결정되는 동적 바인딩을 통해 실현된다. 이는 프로그램의 속도를 떨어뜨리는 원인이 된다.
+
+### 추상클래스와 인터페이스의 공통점
+
+1. 다형성을 보장하기 위해서 등장
+2. `new` 를 이용하여 객체를 생성할 수 없다.
+3. 하위 클래스에 의해 구현되어야 하고 재정의가 필수적이다.
+4. 상위 클래스의 역할로 사용된다. (upcasting으로 객체를 생성)
+5. 추상 메소드를 가진다.
