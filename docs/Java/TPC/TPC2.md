@@ -261,6 +261,191 @@ System.out.println(obj.toString());
 1. 다형성 인수: 부모 클래스를 매개변수로 받는 메소드를 만들어 다형성을 보장한다.
 2. 다형성 배열: 각각의 공간에 타입이 다른 클래스를 저장할 수 있다.
 
+## package(패키지)가 뭐에요?
+
+### package(패키지)
+
+- 기능이 비슷한 클래스를 모아서 관리하기 쉽게 하기 위해
+- package 외부에서 접근하는 것을 막을 때 사용
+
+### package 외부에서 특정 클래스에 접근하는 방법
+
+```java
+public class TPC33{
+    public static void main(String[] args){
+        kr.inflearn.MyClass my = new kr.inflearn.MyClass();
+    }
+}
+```
+
+```java
+import kr.inflearn.*;
+
+public class TPC33{
+    public static void main(String[] args){
+        MyClass my = new MyClass();
+    }
+}
+```
+
+### default 접근 권한
+
+- package 내부에 있는 클래스에게는 public
+- package 외부에 있는 클래스에게는 private
+
+## Java에서 제공해주는 API 접근 및 활용
+
+java.lang package는 default package로 클래스를 만들면 자동으로 import된다.
+
+String 클래스는 java.lang 패키지에 포함되어 있기 때문에 따로 import하지 않아도 사용 가능하다.
+
+객체를 만드는 것도 중요하지만 기존에 존재하는 객체 사용법을 익히는 것도 중요하다.
+
+## 문자열(String)이 객체라고요?
+
+### String 클래스
+
+Java에서 문자열은 쌍따옴표(" ")로 감싸면 된다.
+
+Java에서 문자열을 저장하는 기본 자료형(ex. int, char, float)은 없다.
+
+문자열은 여러 가지 조작을 할 수 있기 때문에 별도의 클래스로 자료형(**java.lang.String**)을 만들어 두었다.
+
+그래서 Java에서 문자열은 책, 영화, 회원처럼 **객체**로 취급된다.
+
+### 문자열 생성방법
+
+1. new로 생성
+
+```java
+String str1 = new String("APPLE");
+String str2 = new String("APPLE");
+```
+
+이렇게 생성된 String 객체는 Heap Area에 저장되고 str1, str2는 각각 메모리 상의 다른 주소를 가리킨다.
+
+2. 문자열 상수로 생성
+
+```java
+String str3 = "APPLE";
+String str4 = "APPLE";
+```
+
+이렇게 생성된 String 객체는 Literal Pool에 저장되고 str1, str2는 메모리 상의 같은 주소를 가리킨다.
+
+- Literal Pool: 문자열 상수(객체)가 생성되는 메모리 영역
+
+## 내가 만든 최초 API
+
+### 배열처럼 동작하는 클래스 만들기(IntArray)
+
+API를 사용할 경우 배열의 구체적인 동작 방식([] 기호 사용 등)을 몰라도 배열을 사용할 수 있다.
+
+IntArray의 한계점: `int`형 데이터만 배열에 담을 수 있다. -> `ArrayList`라는 API를 사용하여 문제 해결
+
+## ArrayList 흉내내기(Object[])
+
+### 배열처럼 동작하는 클래스 만들기(ObjectArray)
+
+| 내가 만든 API(10%) | Java에서 제공해주는 API(100%)   |
+| ------------------ | ------------------------------- |
+| 길이 제한 있음     | 길이 제한 없음 (기본 길이는 10) |
+
+## 크기에 상관 없이 객체를 저장하기(List)
+
+### ArrayList에 책(BookDTO) 3권을 저장하고 출력하기
+
+ArrayList는 add(), get(), size() 등의 메소드를 가진다.
+
+- add() 메소드는 upcasting으로 동작한다.
+
+```java
+List list = new ArrayList();
+list.add(new BookDTO("Java", 21000, "영진", 590));
+```
+
+- get() 메소드는 downcasting으로 동작한다.
+
+```java
+BookDTO b = (BookDTO)list.get(0);
+```
+
+ArrayList에는 서로 다른 타입의 객체를 저장할 수 있지만 실무에서 이러한 방식으로 객체를 저장하는 경우는 없다고 봐도 좋다. 그래서 `ArrayList<BookDTO>`와 같은 형식으로 ArrayList에 넣는 자료형을 제한하는데 이를 제네릭(generic)이라고 한다. 
+
+제네릭을 사용하면
+
+- 형변환이 필요없고 타입안정성이 보장된다.
+- 코드의 재사용성이 높아진다.
+
+## Wrapper 클래스란?
+
+기본자료형을 객체자료형으로 사용할 수 있도록 만들어 놓은 자료형으로 **포장 클래스**라고도 한다.
+
+<table>
+    <thead>
+        <tr>
+            <th>기본자료형</th>
+            <th>객체자료형</th>
+            <th colspan=2>사용 예</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>int</td>
+            <td>Integer</td>
+            <td>1</td>
+            <td>new Integer(1)</td>
+        </tr>
+        <tr>
+            <td>float</td>
+            <td>Float</td>
+            <td>23.4f</td>
+            <td>new Float(23.4f)</td>
+        </tr>
+        <tr>
+            <td>char</td>
+            <td>Character</td>
+            <td>'A'</td>
+            <td>new Character('A')</td>
+        </tr>
+        <tr>
+            <td>boolean</td>
+            <td>Boolean</td>
+            <td>true</td>
+            <td>new Boolean(true)</td>
+        </tr>
+    </tbody>
+</table>
+
+- 변수에 1을 저장하는 방법 2가지
+
+```java
+int a = 1; // Case 1
+Integer b = new Integer(1); // Case 2
+int v = b.intValue();
+```
+
+- 기본자료형을 Object[] 배열에 저장할 경우
+
+```java
+Object[] obj = new Object[3];
+obj[0] = new Integer(1); // obj[0] = 1;은 안되나?
+obj[1] = new Integer(2);
+obj[2] = new Integer(3);
+```
+
+- Boxing과 Unboxing
+
+```java
+Integer a = 1; // Boxing -> Integer a = new Integer(10);
+```
+
+```java
+int b = new Integer(10); // Unboxing -> int b = new Integer(10).intValue();
+```
+
+Boxing은 기본자료형을 객체자료형으로 바꾸는 것이고, Unboxing은 객체자료형을 기본자료형으로 바꾸는 것이다. Boxing과 Unboxing 모두 컴파일러에 의하여 자동으로 수행될 수 있다.
+
 ## 학습정리(객체지향 3대 특징)
 
 ### 객체지향 프로밍의 3대 특징
