@@ -1,7 +1,7 @@
 ---
 layout: default
 title: What is Microservices?
-parent: MSA
+tag: MSA
 permalink: docs/MSA/WhatisMicroservices
 ---
 
