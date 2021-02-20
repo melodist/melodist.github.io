@@ -7,8 +7,8 @@ permalink: /
 ---
 # Recent Posts
 
-{% for post in site.posts %}
-  {% unless post.tags contains "UF" %}
-    {{ post.title }}
-  {% endunless %}
-{% endfor %}
+{%- for post in site.posts -%}
+{% unless post.tags contains "UF" %}
+  <li><a href="{{post.url}}">{{ post.title }}</a></li>
+{% endunless %}
+{%- endfor -%}
