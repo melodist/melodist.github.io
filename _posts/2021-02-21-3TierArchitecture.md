@@ -1,8 +1,8 @@
 ---
 layout: post
 title: 3-Tier Architecture
-tags: [Web, UF]
-permalink: docs/Web/3TierArchitecutre
+tags: [Web, Architecture]
+permalink: docs/Web/3TierArchitecture
 ---
 
 ## 1-Tier Architecutre
@@ -59,14 +59,10 @@ Client Tier와 Data Tier로 2개의 물리적 컴퓨터로 구분되며 클라�
 
 3-Tier Architecture는 물리적인 공간을 기준으로 역할을 구분한 것이고 MVC Pattern은 소프트웨어 디자인 패턴 중 하나로 컴포넌트간 역할을 구분한 것이다.
 
+## References
 
+[3-tier의 장단점 2-tier과의 차이점](https://m.cafe.daum.net/psdotnet/244w/14?q=D_3DXX1nSmrbc0&)
 
-Socket이 이미 사용 중일 경우 어떤 응답을 보내는가? 소켓 프로그래밍과 연관
+[[이해하기\] 3계층 구조 (3 Tier Architecture) | STEVEN J. LEE](https://www.stevenjlee.net/2020/05/08/이해하기-3계층-구조-3-tier-architecture/)
 
-커널은 listen 소켓에 대해 2가지 큐를 가지고 있다.
-
-1. incomplete connection queue: 클라이언트가 3HSK를 맺기 위해서 보낸 SYN 패킷을 저장하는 큐로 이러한 소켓은 SYN_RCVD 상태에 있다.
-
-2. 3HSK가 맺어진 상태에 있는 클라이언트의 항목을 저장하는 큐이다.  이러한 소켓은 ESTABLISHED 상태에 있다. accept가 되면 완전 연결 큐에 있는 첫번째 엔트리의 소켓이 반환된다.
-
-   backlog가 가득 찼을 때 연결 요청이 들어오면 거절된다.
+[MVC패턴을 적용하고 '3tier 구조'로 되어있다. ](https://pearlluck.tistory.com/42)
