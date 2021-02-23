@@ -3,6 +3,11 @@ layout: table_wrappers
 ---
 
 <!DOCTYPE html>
+<head>
+{% if page.use_math %}
+  {% include mathjax_support.html %}
+{% endif %}
+</head>
 
 <html lang="{{ site.lang | default: 'en-US' }}">
 {% include head.html %}
