@@ -4,5 +4,6 @@
 .jekyll-cache
 .sass-cache
 _site
+_config.yml
 Gemfile.lock
 node_modules

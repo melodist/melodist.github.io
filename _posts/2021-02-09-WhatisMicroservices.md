@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: post
 title: What is Microservices?
 tag: MSA
 permalink: docs/MSA/WhatisMicroservices
