@@ -6,8 +6,8 @@ description: "Intro Page"
 permalink: /
 ---
 # Recent Posts
-
-{%- for post in site.posts -%}
+{% assign sorted-posts = site.posts | sort: 'post_date' %}
+{%- for post in sorted-posts -%}
 {% unless post.tags contains "UF" %}
   <li><a href="{{post.url}}">{{ post.title }}</a></li>
 {% endunless %}

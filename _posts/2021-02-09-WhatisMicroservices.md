@@ -3,6 +3,7 @@ layout: post
 title: What is Microservices?
 tag: MSA
 permalink: docs/MSA/WhatisMicroservices
+date: 2021-02-09 01:00:00
 ---
 
 [마이크로서비스 아키텍처 : 패턴과 핵심 기술](https://online.codepresso.kr/course/course_view.jsp?id=16080)

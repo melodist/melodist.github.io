@@ -3,6 +3,7 @@ layout: post
 title: 운영체제 - 시스템 콜
 tag: [OS]
 permalink: /docs/OS/SystemCall
+date: 2021-03-02 00:00:00
 ---
 
 # 운영체제 - 시스템 콜

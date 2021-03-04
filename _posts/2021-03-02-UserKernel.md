@@ -3,6 +3,7 @@ layout: post
 title: 운영체제 - 사용자 모드와 커널 모드
 tag: [OS]
 permalink: /docs/OS/UserKernel
+date: 2021-03-02 01:00:00
 ---
 
 ## CPU Protection Rings

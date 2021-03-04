@@ -3,6 +3,7 @@ layout: post
 title: 스프링 입문 - 코드로 배우는 스프링 부트, 웹 MVC, DB 접근 기술 - 1. 프로젝트 환경설정
 tag: [Spring, SpringEntry]
 permalink: /docs/Spring/Entry/1/
+date: 2021-02-09 00:00:00
 ---
 # 프로젝트 환경설정
 ## 프로젝트 생성

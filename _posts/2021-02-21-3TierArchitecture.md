@@ -3,6 +3,7 @@ layout: post
 title: 3-Tier Architecture
 tags: [Web, Architecture]
 permalink: docs/Web/3TierArchitecture
+date: 2021-02-21 16:35:00
 ---
 
 ## 1-Tier Architecutre

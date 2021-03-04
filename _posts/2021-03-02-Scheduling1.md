@@ -3,6 +3,7 @@ layout: post
 title: 운영체제 - 스케쥴링 - 배치 처리, 멀티 태스킹, 멀티 프로세싱, 멀티 프로그래밍
 tags: [OS]
 permalink: /docs/OS/Scheduling1
+date: 2021-03-02 10:00:00
 ---
 
 # 스케쥴링 - 배치 처리, 멀티 태스킹, 멀티 프로세싱, 멀티 프로그래밍
@@ -43,3 +44,6 @@ permalink: /docs/OS/Scheduling1
 
 ![Multi-programming](https://s3.ap-northeast-2.amazonaws.com/static.gracieuxyh.dev/os/multi-programming.png)
 
+## References
+
+[컴퓨터 공학 전공 필수 올인원 패키지 Online](https://www.fastcampus.co.kr/dev_online_cs)

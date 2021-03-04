@@ -3,6 +3,7 @@ layout: post
 title: 소켓 프로그래밍
 tag: [Network, Socket]
 permalink: /docs/Network/SocketProgramming
+date: 2021-02-27 00:00:00
 ---
 
 # 소켓 프로그래밍
