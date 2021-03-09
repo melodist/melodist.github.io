@@ -104,11 +104,35 @@ REST API의 parameter가 상황마다 다르고 URL도 상황마다 다르다
 
 각각의 App이 트랜잭션 실패 시 보상 Event 발행
 
+구현 시 각 서비스가 구독할 서비스를 지정
+
 ### 2. Orchestration-Based Saga
 
 트랜잭션 시작 시 Saga 인스턴스 생성
 
 트랜잭션 종료 시 Saga 인스턴스 소멸
+
+## 고전적인 JDBC
+
+1. JDBC connect
+2. INSERT
+3. COMMIT
+4. CLOSE
+
+- XA: 2PC를 통한 분산 트랜잭션 처리를 위해 X-Open에서 명시한 표준
+- Global Transaction: 
+- 2 Phase-Commit (2PC): begin -> end -> prepare -> commit
+
+### 트랜잭션 (Transaction)
+
+- 데이터베이스의 상태를 변환시키는 하나의 논리적 기능을 수행하기 위한 작업의 단위
+- 한꺼번에 모두 수행되어야 할 일련의 연산
+
+예를 들어 한 계좌에서 다른 계좌로 출금을 할 때 한 계좌에서 인출이 되고 다른 계좌에서 송금이 되는 일련의 작업은 연속적으로 이루어져야 한다. 트랜잭션은 COMMIT 되거나 ROLLBACK 된다.
+
+## MSA에서의 트랜잭션
+
+
 
 ## 참고
 
