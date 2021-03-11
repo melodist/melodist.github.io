@@ -84,6 +84,10 @@ REST API의 parameter가 상황마다 다르고 URL도 상황마다 다르다
 
 각 서비스의 트랜잭션 정보가 담긴 파일을 읽는다
 
+모든 요청을 REST API로 해야 하나?
+
+URI 외에 추가적인 parameter? 재시도 정책 정도
+
 ## Saga 패턴
 
 트랜잭션을 DBMS가 아닌 Application이 관리
