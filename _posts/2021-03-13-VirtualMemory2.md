@@ -55,6 +55,78 @@ TLB(Translation Lookaside Buffer)라는 레지스터를 도입하여 MMU가 물�
 - 페이지 폴트가 안 일어나게 하려면 향후 실행/참조될 코드/데이터를 미리 물리 메모리에 올리면 되지만
   이러한 일은 현실적으로 불가능하다.
 
+### 페이지 교체 정책 (page replacement policy)
+
+- 운영체제가 특정 페이지를 물리 메모리에 적재하려 할 때 물리 메모리가 다 차있다면
+  - 기존 페이지 중 하나를 물리 메모리에서 저장 매체로 내리고
+  - 새로운 페이지를 해당 물리 메모리 공간에 올린다.
+  - 어떤 페이지를 물리 메모리에서 저장 매체로 내릴 것인가?
+
+1. FIFO: 가장 먼저 들어온 페이지를 내리자
+2. OPT: 앞으로 가장 오랫동안 사용하지 않을 페이지를 내리자 -> 구현 불가능
+3. LRU(Least Recently Used): 가장 오래 전에 사용된 페이지를 교체. Doubly Linked List를 사용하여 구현한다. head에 가까운 데이터일수록 최근에 사용한 데이터이고, tail에 가까울수록 오랫동안 사용하지 않은 데이터로 간주하여 새로운 데이터를 삽입할 때 가장 먼저 삭제되도록 한다. 삽입된 데이터를 사용하게 되면 head로 옮겨 우선순위를 높인다.
+4. LFU(Least Frequently Used): 가장 적게 사용된 페이지를 교체
+5. NUR(Not Used Recently)
+   - LRU와 마찬가지로 최근에 사용하지 않은 페이지부터 교체
+   - 각 페이지마다 참조 비트(R), 수정 비트(M)을 두고 (R, M) :arrow_right: (0, 0), (0, 1), (1, 0), (1, 1) 순으로 페이지 교체
+
+### Locality
+
+```
+#include <stdio.h>
+int main()
+{
+	int i=0;
+	int j=0;
+	for (i=1; i <= 9; i++)
+	{
+		for (j=1; j <= 9; j++)
+		{
+			printf("%d x %d = %d\n", i, j, (i*j));
+		}
+		printf("\n");
+	}
+	return 0;
+}
+```
+
+### Thrashing(스레싱)
+
+![PagingSystem6](https://user-images.githubusercontent.com/52024566/111055650-91838b00-84bb-11eb-95c4-cb10e2a0b84d.png)
+
+반복적으로 페이지 폴트가 발생해서 과도하게 페이지 교체 작업이 일어나 실제로는 아무 일도 하지 못하는 상황
+
+## 세그멘테이션 (Segmentation)
+
+가상 메모리를 서로 크기가 다른 논리적 단위인 세그먼트(segment)로 분할
+
+- 페이징 기법에서는 가상 메모리를 같은 크기의 블록으로 분할
+- ex. x86 리얼모드에서는 CS(Code Segment), DS(Data Segment), SS(Stack Segment), ES(Extra Segment)로 나누어 메모리를 접근
+
+### 세그먼트 가상주소
+
+- v = (s, d): s는 세그먼트 번호, d는 블록 내 세그먼트의 변위
+
+![Sementation1](https://user-images.githubusercontent.com/52024566/111055631-6305b000-84bb-11eb-946d-0432769883e9.png)
+
+### 세그멘테이션 기법
+
+- 세그멘테이션은 크기가 다른 segment 단위로 물리 메모리에 적재
+
+![Sementation2](https://user-images.githubusercontent.com/52024566/111055633-639e4680-84bb-11eb-8ad8-7633d6d3d858.png)
+
+### 단편화
+
+ 메모리 공간이 충분함에도 불구하고 프로세스가 메모리에 적재되지 못해 메모리가 낭비되는 현상
+
+#### 내부 단편화 (페이지 기법)
+
+페이지 블록만큼 데이터가 딱 맞게 채워져있지 않을 때 공간 낭비
+
+#### 외부 단편화 (세그멘테이션 기법)
+
+가변 분할 방식에서 메모리에 프로세스가 적재되고 제거되는 일이 반복되면서, 여유 공간이 충분함도 불구하고 이러한 여유 공간들이 조각으로 흩어져 있어(Scattered Holes) 메모리에 프로세스를 적재하지 못해 메모리가 낭비되는 현상
+
 
 ## References
 
