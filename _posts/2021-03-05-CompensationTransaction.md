@@ -195,6 +195,19 @@ HttpRequest
 
 HttpResponse
 
+### 클래스 다이어그램 설계
+
+StatusDAO / StatusDAOImpl / StatusDTO
+
+1. create(StatusDTO)
+
+2. read
+3. update
+
+StdDAO / StdDAOImpl
+
+1. read
+
 ## 참고
 
 [보상 트랜잭션 | yonghee's blog (wordpress.com)](https://goodyhlee.wordpress.com/tag/보상-트랜잭션/)
