@@ -219,13 +219,15 @@ StdDAO / StdDAOImpl
 2. COMP_STD에서 보상 트랜잭션 URL 조회
    OrchestrationSaga: StdDAO 객체 생성, 객체 내의 readURL() 호출
    StdDAO: StdVO 객체 생성,  COMP_STD 조회하여 객체 내의 setURL() 호출하고 StdVO 반환
-3. 보상 트랜잭션 전문 생성
-   String Parsing
-4. COMP_STATUS에 이력 저장
+3. COMP_STATUS에 이력 저장
    OrchestrationSaga: StatusDAO 객체 생성, 객체 내의 createStatus() 호출
    StatusDAO: createStatus로 COMP_STATUS에 신규 이력 생성
+4. 보상 트랜잭션 전문 생성
+   String Parsing
+   HttpMessageConverter
 5. 보상 트랜잭션 요청
    OrchestrationSaga: WebClient 객체 호출하여 POST / GET 수행
+   다수의 요청에 대하여 비동기로 구현하려면?
 6. 보상 트랜잭션 응답 받음
    OrchestrationSaga: WebClient의 응답 코드에 따라 다음 작업 수행
 7. COMP_STATUS에 결과 기록
