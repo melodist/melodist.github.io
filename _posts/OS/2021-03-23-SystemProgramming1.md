@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 시스템 프로그래밍 - 쉘로 시작하는 시스템 프로그래밍 기본
-tags: [OS, Linux, SystemProgramming]
+tags: [OS, Linux, SystemProgramming, UF]
 permalink: /docs/OS/SystemProgramming1
 date: 2021-03-23 17:55:00
 ---
@@ -52,6 +52,41 @@ Retype UNIX password:
 ```
 
 ## 파일 및 권한 관리
+
+pwd: 현재 디렉토리 위치
+
+cd: 디렉토리 이동
+
+ls: 파일 목록 출력 (*는 임의 문자열, ?는 문자 하나)
+
+### ls와 파일 권한
+
+![Shell1](https://user-images.githubusercontent.com/52024566/112439658-bebe1c00-8d8c-11eb-9904-aecfafe19e5a.png)
+
+### chmod: 파일 권한 변경
+
+- 기호 문자를 사용하는 방법
+
+![Shell2](https://user-images.githubusercontent.com/52024566/112440223-5f144080-8d8d-11eb-917d-a322618b11b5.png)
+
+- 숫자를 사용하는 방법
+
+![Shell3](https://user-images.githubusercontent.com/52024566/112440227-60456d80-8d8d-11eb-8c77-41a8b25bdbd2.png)
+
+### chown: 소유자 변경
+
+chown [옵션] [소유자:소유그룹] [파일]
+
+cat: 파일 보기
+
+head/tail: 파일 시작/끝부분 보기
+
+more: 화면이 넘어가기 전까지의 파일 보기
+
+### rm: 파일 및 폴더 삭제
+
+- r 옵션 : 하위 디렉토리를 포함한 모든 파일 삭제
+- -f 옵션 : 강제로 파일이나 디렉토리 삭제
 
 ## 리다이렉션과 파이프
 
