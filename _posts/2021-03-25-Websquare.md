@@ -25,7 +25,7 @@ Service 실행 -> DTO List 인자로 받아 테이블의 모든 행에 대해 �
 4. DataCollection과 Server를 연결하는 Submission 생성
 5. Mybatis Mapper 생성
 
-## 조회 화면 개발 과정
+## 트랜잭션 기준 정보 조회 화면 개발 과정
 
 1. 화면 그리기
 2. DatacCollection 생성
@@ -87,6 +87,32 @@ Service 실행 -> DTO List 인자로 받아 테이블의 모든 행에 대해 �
 | INS_DTM   | DATE          | 입력일시                  |
 | MOD_ID    | VARCHAR2(10)  | 수정ID                    |
 | MOD_DTM   | DATE          | 수정일시                  |
+
+### 저장 기능 동작 과정
+
+1. dlt_transactionStdList 편집
+
+2. 저장 버튼 클릭 -> scwin.BtnSave_onclick 이벤트 발생
+
+3. scwin.BtnSave_onclick 함수 실행
+
+   1. com.sbm.execute(saveSubmission) 실행
+   2. saveSubmission에 지정된 URL gcm.ACTION_PREFIX.CM/fw/tpl/fulfillment/save에 POST 요청
+
+4. WAS에서 FulfillmentController에 등록된 정보에 따라 saveStd호출
+
+   1. FulfillmentService에서 saveStd() 호출
+   2. 갱신한 열 갯수 resultFlag에 담아서 반환
+
+5. FulfillmentService에서 `saveStd(stdList: List<FulfillmentDto>)` 호출
+
+   1. stdList를 돌면서 반복문 수행
+
+   2. rowStatus를 확인하고 rowStatus에 따른 CUD 수행
+
+      :arrow-right: CompStdInquire에서 set("pageNum", idx)를 통하여 입력됨
+
+   3. FulfillmentMapper.getSTD(Dto.getRequest()) 반환
 
 ### Mybatis Mapper 구성
 
@@ -151,7 +177,26 @@ public class CommonPageDto<T> implements Serializable {
 ### 20210329
 
 1. 화면에서 넘어온 값 표시 안되는 문제
+
+   -> GridView의 Body 각각에 id를 지정해줘야 함
+
 2. serviceCategory, serviceID, serviceURL, description 안 넘어오는 문제
+
+   ->  내가 보고 있었던 것은 DB로 넘어가기 전의 객체였음. 따라서 정상적으로 넘어갔음
+
+### 20210330
+
+1. 설명 깨지는 문제
+
+   -> H2 DB의 data.sql 파일의 인코딩 문제 (ANSI였음)
+
+2. 보상 트랜잭션에 UID 자동으로 부여하는 방법은?
+
+   -> DB마다 방법은 다르지만 특정 컬럼에 자동으로 증가하는 값 부여 가능
+
+3. 서비스 수행일자로 DB 조회하는 방법은?
+
+   -> 단순히 TIMESTAMP로 비교하면 됨
 
 ## 참고
 
