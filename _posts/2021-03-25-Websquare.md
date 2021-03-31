@@ -25,7 +25,7 @@ Service 실행 -> DTO List 인자로 받아 테이블의 모든 행에 대해 �
 4. DataCollection과 Server를 연결하는 Submission 생성
 5. Mybatis Mapper 생성
 
-## 트랜잭션 기준 정보 조회 화면 개발 과정
+## 보상 트랜잭션 기준 정보 조회 화면 개발 과정
 
 1. 화면 그리기
 2. DatacCollection 생성
@@ -114,6 +114,29 @@ Service 실행 -> DTO List 인자로 받아 테이블의 모든 행에 대해 �
 
    3. FulfillmentMapper.getSTD(Dto.getRequest()) 반환
 
+### 프론트엔드에서 고려해야 할 것
+
+- GET 선택시 동기/비동기 중 동기로 고정. 재시도 횟수는 0으로 선택 불가능하게.
+
+## 보상 트랜잭션 수행 이력 조회 화면 개발 과정
+
+### 보상 트랜잭션 이력 테이블 (TCOMP_STATUS) 구조
+
+| 컬럼             | 유형         | 컬럼명                    |
+| ---------------- | ------------ | ------------------------- |
+| COMPTRX_ID       | VARCHAR2(25) | 보상 트랜잭션 ID          |
+| SERVICE_ID       | VARCHAR2(5)  | 보상 트랜잭션 서비스 ID   |
+| SERVICE_CATEGORY | VARCHAR2(2)  | 보상 트랜잭션 서비스 구분 |
+| COMPTRX_CALLER   | CHAR(1)      |                           |
+| SYNC_FLAG        | CHAR(1)      | 동기/비동기               |
+| HTTP_FLAG        | CHAR(1)      | http/https 여부           |
+| REST_FLAG        | CHAR(1)      | GET/POST                  |
+| RETRY_STD        | NUMBER(1)    | 허용된 재시도 횟수        |
+| INS_ID           | VARCHAR2(10) | 입력ID                    |
+| INS_DTM          | DATE         | 입력일시                  |
+| MOD_ID           | VARCHAR2(10) | 수정ID                    |
+| MOD_DTM          | DATE         | 수정일시                  |
+
 ### Mybatis Mapper 구성
 
 - `<mapper namespace="cj.bts.fw.tpl.fulfillment.dbmapper.FulfillmentMapper">`
@@ -198,6 +221,36 @@ public class CommonPageDto<T> implements Serializable {
 
    -> 단순히 TIMESTAMP로 비교하면 됨
 
+### 20210331
+
+1. invalid value 1 for parameter parameterindex
+
+   -> SQL문의 따옴표('), 세미콜론(;) 등이 잘못 사용되지 않았는지 점검.
+
+   특히 SQL문을 DB에서 사용할 경우 세미콜론을 사용하는데 xml에서는 사용하면 안됨
+
+2. Mybatis 사용 시 부등호 그냥 쓰면  괄호인지 부등호인지 구분할 수 없기 때문에 그냥 쓰면 안됨.
+
+   -> CDATA로 감싸서 해결
+
+3. InputCalendar가 입력값 못 받는 문제
+
+   -> ref 값으로 datacollection과 매칭함
+
+4. 저장시 서버 오류 뜨는 문제
+
+   -> controller에 대응하는 service가 없을 경우 발생
+
+5. DB에서 얻은 코드를 풀어서 표현
+
+   -> Table join도 가능하나 autoComplete 사용
+
+6. 웹스퀘어 날짜 표현
+
+   -> 웹스퀘어에서 제공하는 API가 그지같아서 javascript 사용
+
+7. 파일 호출한 곳 찾기 : Ctrl+Shift+G
+
 ## 참고
 
 http://docs.inswave.com:1975/
@@ -209,3 +262,5 @@ http://docs.inswave.com:1975/
 [[Spring\] @RequestBody, @ModelAttribute, @RequestParam의 차이 - MangKyu's Diary (tistory.com)](https://mangkyu.tistory.com/72)
 
 [[MyBatis\] 동적 쿼리 if문 문법 총 정리 (tistory.com)](https://java119.tistory.com/42)
+
+[Mybatis 에서 CDATA 사용하기 :: 물고기 개발자의 블로그 (tistory.com)](https://epthffh.tistory.com/entry/Mybatis-에서-CDATA-사용하기)
