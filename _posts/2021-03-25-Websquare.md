@@ -117,6 +117,7 @@ Service 실행 -> DTO List 인자로 받아 테이블의 모든 행에 대해 �
 ### 프론트엔드에서 고려해야 할 것
 
 - GET 선택시 동기/비동기 중 동기로 고정. 재시도 횟수는 0으로 선택 불가능하게.
+- POST 선택시 동기/비동기, 재시도 횟수 초기화가 더 불편한듯
 
 ## 보상 트랜잭션 수행 이력 조회 화면 개발 과정
 
@@ -136,6 +137,10 @@ Service 실행 -> DTO List 인자로 받아 테이블의 모든 행에 대해 �
 | INS_DTM          | DATE         | 입력일시                  |
 | MOD_ID           | VARCHAR2(10) | 수정ID                    |
 | MOD_DTM          | DATE         | 수정일시                  |
+
+## 보상 트랜잭션 요청 기능 개발 과정
+
+### 보상 트랜잭션 요청 기능 동작 Timeline
 
 ### Mybatis Mapper 구성
 
@@ -250,6 +255,45 @@ public class CommonPageDto<T> implements Serializable {
    -> 웹스퀘어에서 제공하는 API가 그지같아서 javascript 사용
 
 7. 파일 호출한 곳 찾기 : Ctrl+Shift+G
+
+### 20210401
+
+1. DAO는 어디로 갔나?
+
+   -> dbmapper가 DAO 역할을 한다.
+
+2. DAOImpl은 어디로 갔나?
+
+   -> dbmapper가 Interface 형태로 구현되었고 DAOImpl은 .xml이 한다.
+
+3. GridView 입력값 검증은 어떻게?
+
+4. 시연 시나리오
+
+   원래 서비스 -> 요청 서비스 -> 원래 서비스 에러
+
+### 20210407
+
+1. UPDATE시 ListDto 필요. @RequestBody도 필요. dma가 아니라 dlt를 넘김.
+
+2. 결제 성공 / 실패 구분은 어떻게?
+
+   성공 : 결제 성공 INSERT / 결제 조회 콜백
+
+   실패 : 결제 실패 INSERT / 보상 트랜잭션 호출 / 결제 조회 콜백
+
+3. GridView와 연결된 Table을 수정할때 GridView와 연결된 dlt를 ref로 넘겨야됨
+
+4. https 요청을 할 때 추가적으로 필요한 것이 있는가?
+   보증서 등을 추가해야 하는데 일단 보류
+
+5. 비동기 요청이 잘 되었는지 어떻게 검증하는가?
+   Log로 간단하게 검증이 가능했다. Async 이후의 과정이 먼저 발생하는 것을 확인.
+
+6. 주문 상태를 Update하는 과정을 어떻게 할까?
+   결제에서 API로 그냥 update
+
+7. RestTemplate을 WebClient로 바꿀 수 있을까?
 
 ## 참고
 
