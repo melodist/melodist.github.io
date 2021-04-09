@@ -295,6 +295,43 @@ public class CommonPageDto<T> implements Serializable {
 
 7. RestTemplate을 WebClient로 바꿀 수 있을까?
 
+8. 서비스에서 타 서비스를 API로 호출하려면 어떻게 해야할까?
+   그리고 호출할 때 JSON 객체를 보내려면 어떻게 해야할까?
+
+### 20210408
+
+1. 보상 트랜잭션 기준 정보에서 조회가 되지 않았을 경우 예외 처리 필요
+
+2. TRUNCATE로 주문 테이블 초기화하는 과정에서 주문 번호 초기화되지 않는 문제
+
+   ALTER TABLE ALTER COLUMN ID RESTART WITH 1로 해결
+
+3. Bootstrap 테마 적용 가능한지
+
+   외부 스크립트 적용 - Style 뷰에서 각 컴포넌트 설정에서 원하는 클래스 입력하여 적용
+
+4. 메뉴 적용하여 주문/물류/결제 분리하여 표시할 수 있을지
+
+   Bootstrap 도입하고 iframe으로 표시
+
+5. 원하는 View 다시 불러오는 방법
+
+   Quick Access - 원하는 View 입력
+
+6. 어떤 기능을 Service에 넣고 어떤 기능을 Controller에 넣지?
+
+   보상 트랜잭션 호출, 주문 상태 수정 모두 Transaction 하에 연속적으로 일어나므로 Service에 넣는다.
+
+### 20210409
+
+1. WebSquare 메시지 팝업 폰트 문제
+
+2. CSS 외부 폰트 사용 방법
+
+   css 스타일 시트 @font-face
+
+3. dropdown 안 닫히는 문제
+
 ## 참고
 
 http://docs.inswave.com:1975/
