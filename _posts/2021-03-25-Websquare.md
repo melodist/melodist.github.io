@@ -332,6 +332,16 @@ public class CommonPageDto<T> implements Serializable {
 
 3. dropdown 안 닫히는 문제
 
+   최상위 Body에 container-fluid p-0 m-0 속성 부여
+
+### 20210412
+
+1. Table 오른쪽 다 못 채우는 문제
+
+   상위 display: flex; 자신 float: right; / 모두 container-fluid
+
+2. 글자 크기도 반응형으로
+
 ## 참고
 
 http://docs.inswave.com:1975/
