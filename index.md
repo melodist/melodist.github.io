@@ -7,7 +7,7 @@ permalink: /
 ---
 # Recent Posts
 {% assign sorted-posts = site.posts | sort: 'post_date' %}
-{%- for post in sorted-posts -%}
+{%- for post in sorted-posts limit: 10 -%}
 {% unless post.tags contains "UF" %}
   <li><a href="{{post.url}}">{{ post.title }}</a></li>
 {% endunless %}
