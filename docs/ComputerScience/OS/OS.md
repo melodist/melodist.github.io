@@ -2,6 +2,7 @@
 layout: default
 title: OS
 nav_order: 2
+parent: ComputerScience
 permalink: docs/ComputerScience/OS
 ---
 
