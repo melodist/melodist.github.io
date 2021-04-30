@@ -1,8 +1,8 @@
 ---
 layout: default
 title: Computer Architecutre
-nav_order: 2
-permalink: docs/OS
+nav_order: 1
+permalink: docs/ComputerScience/ComputerArchitecture
 ---
 
 # Computer Architecture

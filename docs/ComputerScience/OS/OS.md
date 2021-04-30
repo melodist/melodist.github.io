@@ -2,7 +2,7 @@
 layout: default
 title: OS
 nav_order: 2
-permalink: docs/OS
+permalink: docs/ComputerScience/OS
 ---
 
 # Operating Systems
