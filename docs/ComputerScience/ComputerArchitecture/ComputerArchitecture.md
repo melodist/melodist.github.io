@@ -3,7 +3,6 @@ layout: default
 title: Computer Architecutre
 nav_order: 1
 parent: ComputerScience
-permalink: docs/ComputerScience/ComputerArchitecture
 ---
 
 # Computer Architecture

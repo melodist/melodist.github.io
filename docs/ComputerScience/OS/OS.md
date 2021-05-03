@@ -1,12 +1,11 @@
 ---
 layout: default
-title: OS
+title: Operating System
 nav_order: 2
 parent: ComputerScience
-permalink: docs/ComputerScience/OS
 ---
 
-# Operating Systems
+# Operating System
 운영체제 관련 학습 내용
 
 {% for post in site.tags.OS reversed %}
