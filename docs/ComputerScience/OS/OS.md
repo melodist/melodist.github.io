@@ -2,7 +2,7 @@
 layout: default
 title: Operating System
 nav_order: 2
-parent: ComputerScience
+parent: Computer Science
 ---
 
 # Operating System

@@ -2,7 +2,7 @@
 layout: default
 title: Computer Architecutre
 nav_order: 1
-parent: ComputerScience
+parent: Computer Science
 ---
 
 # Computer Architecture
