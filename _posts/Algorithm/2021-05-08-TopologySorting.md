@@ -24,3 +24,4 @@ date: 2021-05-08 11:17:00
 
 ## 위상 정렬 예시
 [백준 1005 - ACM Craft](https://www.acmicpc.net/problem/1005)
+[백준 2252 - 줄 세우기](https://www.acmicpc.net/problem/2252)
