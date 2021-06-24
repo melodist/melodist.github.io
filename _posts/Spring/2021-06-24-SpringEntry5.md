@@ -40,7 +40,7 @@ public class MemberController {
 	}
     
 	@GetMapping(value = "/members/new")
-    public String createForm() {
+	public String createForm() {
 		return "members/createMemberForm";
 	}
     
@@ -57,11 +57,11 @@ public class MemberController {
 <div class="container">
 	<form action="/members/new" method="post">
 		<div class="form-group">
-            <label for="name">이름</label>
-            <input type="text" id="name" name="name" placeholder="이름을 입력하세요">
+			<label for="name">이름</label>
+			<input type="text" id="name" name="name" placeholder="이름을 입력하세요">
 		</div>
 		<button type="submit">등록</button>
-    </form>
+	</form>
 
 </div> <!-- /container -->
     
@@ -75,13 +75,13 @@ public class MemberController {
 
 ```java
 public class MemberForm {
-    private String name;
+	private String name;
 
-    public String getName() {
+	public String getName() {
 		return name;
 	}
 
-    public void setName(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 }
