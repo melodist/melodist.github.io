@@ -1,3 +1,10 @@
+---
+layout: post
+title: 스프링 배치
+tag: [Spring, SpringBatch, UF]
+permalink: /docs/Spring/SpringBatch
+---
+
 Builder 메소드
 
 Factory 메소드

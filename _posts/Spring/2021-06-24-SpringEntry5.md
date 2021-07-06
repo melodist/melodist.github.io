@@ -1,8 +1,8 @@
 ---
 layout: post
 title: 스프링 입문 - 코드로 배우는 스프링 부트, 웹 MVC, DB 접근 기술 - 5. 회원 관리 예제 - 웹 MVC 개발
-tag: [Spring, SpringEntry]
-permalink: /docs/Spring/Entry/4
+tag: [Spring, SpringEntry, UF]
+permalink: /docs/Spring/Entry/5
 ---
 # 회원 관리 예제 - 웹 MVC 개발
 
