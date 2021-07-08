@@ -1,8 +1,8 @@
 ---
 layout: post
-title: 스프링 입문 - 코드로 배우는 스프링 부트, 웹 MVC, DB 접근 기술 - 6. 스프링 DB 접근 기술
-tag: [Spring, SpringEntry]
-permalink: /docs/Spring/Entry/6
+title: 스프링 입문 - 코드로 배우는 스프링 부트, 웹 MVC, DB 접근 기술 - 7. AOP
+tag: [Spring, SpringEntry, UF]
+permalink: /docs/Spring/Entry/7
 ---
 # 스프링 DB 접근 기술
 
