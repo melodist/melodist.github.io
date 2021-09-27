@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 스프링 핵심 원리 - 기본편  - 1. 객체 지향 설계와 스프링
-tags: [Spring, SpringCore, UF]
+tags: [Spring, SpringCore]
 permalink: /docs/Spring/SpringCore_1
 date: 2021-08-18 23:21:00
 ---
