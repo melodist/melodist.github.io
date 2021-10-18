@@ -15,6 +15,7 @@ date: 2021-10-15 23:30:00
 악덕 기획자: 애자일 소프트웨어 개발 선언 몰라요? “계획을 따르기보다 변화에 대응하기를”
 순진 개발자: … (하지만 난 유연한 설계가 가능하도록 객체지향 설계 원칙을 준수했지 후후)
 > 참고: 애자일 소프트웨어 개발 선언 https://agilemanifesto.org/iso/ko/manifesto.html
+
 순진 개발자가 정말 객체지향 설계 원칙을 잘 준수 했는지 확인해보자. 이번에는 주문한 금액의 %를 할인해
 주는 새로운 정률 할인 정책을 추가하자.
 RateDiscountPolicy 추가
@@ -156,7 +157,7 @@ FixDiscountPolicy
 AppConfig는 생성한 객체 인스턴스의 참조(레퍼런스)를 생성자를 통해서 주입(연결)해준다.
 MemberServiceImpl MemoryMemberRepository
 OrderServiceImpl MemoryMemberRepository , FixDiscountPolicy
-> 참고: 지금은 각 클래스에 생성자가 없어서 컴파일 오류가 발생한다. 바로 다음에 코드에서 생성자를 만든
+참고: 지금은 각 클래스에 생성자가 없어서 컴파일 오류가 발생한다. 바로 다음에 코드에서 생성자를 만든
 다.
 MemberServiceImpl - 생성자 주입
 package hello.core.member;
