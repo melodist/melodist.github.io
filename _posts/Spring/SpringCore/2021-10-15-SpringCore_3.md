@@ -18,22 +18,30 @@ date: 2021-10-15 23:30:00
 
 순진 개발자가 정말 객체지향 설계 원칙을 잘 준수 했는지 확인해보자. 이번에는 주문한 금액의 %를 할인해
 주는 새로운 정률 할인 정책을 추가하자.
-RateDiscountPolicy 추가
-RateDiscountPolicy 코드 추가
+**RateDiscountPolicy 추가**
+**RateDiscountPolicy 코드 추가**
+
+```java
 package hello.core.discount;
+
 import hello.core.member.Grade;
 import hello.core.member.Member;
+
 public class RateDiscountPolicy implements DiscountPolicy {
-private int discountPercent = 10; //10% 할인
-@Override
-public int discount(Member member, int price) {
-if (member.getGrade() == Grade.VIP) {
-return price * discountPercent / 100;
-} else {
-return 0;
+    
+    private int discountPercent = 10; //10% 할인
+    
+    @Override
+    public int discount(Member member, int price) {
+        if (member.getGrade() == Grade.VIP) {
+            return price * discountPercent / 100;
+        } else {
+            return 0;
+        }
+    }
 }
-}
-}
+```
+
 테스트 작성
 package hello.core.discount;
 import hello.core.member.Grade;
