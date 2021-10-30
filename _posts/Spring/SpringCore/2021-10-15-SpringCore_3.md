@@ -14,6 +14,7 @@ date: 2021-10-15 23:30:00
 순진 개발자: 제가 처음부터 고정 금액 할인은 아니라고 했잖아요.
 악덕 기획자: 애자일 소프트웨어 개발 선언 몰라요? “계획을 따르기보다 변화에 대응하기를”
 순진 개발자: … (하지만 난 유연한 설계가 가능하도록 객체지향 설계 원칙을 준수했지 후후)
+
 > 참고: 애자일 소프트웨어 개발 선언 https://agilemanifesto.org/iso/ko/manifesto.html
 
 순진 개발자가 정말 객체지향 설계 원칙을 잘 준수 했는지 확인해보자. 이번에는 주문한 금액의 %를 할인해
@@ -42,37 +43,47 @@ public class RateDiscountPolicy implements DiscountPolicy {
 }
 ```
 
-테스트 작성
+**테스트 작성**
+
+```java
 package hello.core.discount;
+
 import hello.core.member.Grade;
 import hello.core.member.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
+
 class RateDiscountPolicyTest {
-RateDiscountPolicy discountPolicy = new RateDiscountPolicy();
-@Test
-@DisplayName("VIP는 10% 할인이 적용되어야 한다.")
-void vip_o() {
-//given
-Member member = new Member(1L, "memberVIP", Grade.VIP);
-//when
-int discount = discountPolicy.discount(member, 10000);
-//then
-assertThat(discount).isEqualTo(1000);
+    
+    RateDiscountPolicy discountPolicy = new RateDiscountPolicy();
+    
+    @Test
+    @DisplayName("VIP는 10% 할인이 적용되어야 한다.")
+    void vip_o() {
+        //given
+        Member member = new Member(1L, "memberVIP", Grade.VIP);
+        //when
+        int discount = discountPolicy.discount(member, 10000);
+        //then
+        assertThat(discount).isEqualTo(1000);
+    }
+    
+    @Test
+    @DisplayName("VIP가 아니면 할인이 적용되지 않아야 한다.")
+    void vip_x() {
+        //given
+        Member member = new Member(2L, "memberBASIC", Grade.BASIC);
+        //when
+        int discount = discountPolicy.discount(member, 10000);
+        //then
+        assertThat(discount).isEqualTo(0);
+    }
 }
-@Test
-@DisplayName("VIP가 아니면 할인이 적용되지 않아야 한다.")
-void vip_x() {
-//given
-Member member = new Member(2L, "memberBASIC", Grade.BASIC);
-//when
-int discount = discountPolicy.discount(member, 10000);
-//then
-assertThat(discount).isEqualTo(0);
-}
-}
+```
+
 할인정책을 추가하고 테스트 까지 완료했다.
 새로운 할인 정책 적용과 문제점
 방금 추가한 할인 정책을 적용해보자.
