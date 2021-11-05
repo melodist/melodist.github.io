@@ -407,36 +407,49 @@ class OrderServiceTest {
 - 이제 각 배우들은 담당 기능을 실행하는 책임만 지면 된다.
 - `OrderServiceImpl` 은 기능을 실행하는 책임만 지면 된다.
 
-![스프링 핵심 원리 이해2 - 08  AppConfig 리팩터링](https://user-images.githubusercontent.com/52024566/139690939-7a20fb8a-a0c0-402d-99fa-7fe06cf45d4e.png)
-![스프링 핵심 원리 이해2 - 09  사용, 구성의 분리](https://user-images.githubusercontent.com/52024566/139690940-a3803933-45a1-4318-88e0-87ac33f1c52f.png)
-![스프링 핵심 원리 이해2 - 10  할인 정책의 변경](https://user-images.githubusercontent.com/52024566/139690942-1bddf581-ba0c-430d-89be-952a5ce7ec07.png)
-![스프링 핵심 원리 이해2 - 11  DI - 클래스 다이어그램](https://user-images.githubusercontent.com/52024566/139690944-000fa1e6-c0a6-42db-a8c5-dccf0ad660c7.png)
-![스프링 핵심 원리 이해2 - 12  DI - 객체 다이어그램](https://user-images.githubusercontent.com/52024566/139690946-2c478ab5-087a-4872-9b5f-2bc7f8277337.png)
 
-AppConfig 리팩터링
+
+
+## AppConfig 리팩터링
+
 현재 AppConfig를 보면 중복이 있고, 역할에 따른 구현이 잘 안보인다.
-기대하는 그림
-리팩터링 전
+
+**기대하는 그림**
+
+![스프링 핵심 원리 이해2 - 08  AppConfig 리팩터링](https://user-images.githubusercontent.com/52024566/139690939-7a20fb8a-a0c0-402d-99fa-7fe06cf45d4e.png)
+
+**리팩터링 전**
+
+```java
 package hello.core;
+
 import hello.core.discount.FixDiscountPolicy;
 import hello.core.member.MemberService;
 import hello.core.member.MemberServiceImpl;
 import hello.core.member.MemoryMemberRepository;
 import hello.core.order.OrderService;
 import hello.core.order.OrderServiceImpl;
+
 public class AppConfig {
-public MemberService memberService() {
-return new MemberServiceImpl(new MemoryMemberRepository());
+    public MemberService memberService() {
+        return new MemberServiceImpl(new MemoryMemberRepository());
+    }
+
+    public OrderService orderService() {
+        return new OrderServiceImpl(
+            new MemoryMemberRepository(),
+            new FixDiscountPolicy());
+    }
 }
-public OrderService orderService() {
-return new OrderServiceImpl(
-new MemoryMemberRepository(),
-new FixDiscountPolicy());
-}
-}
+```
+
 중복을 제거하고, 역할에 따른 구현이 보이도록 리팩터링 하자.
-리팩터링 후
+
+**리팩터링 후**
+
+```java
 package hello.core;
+
 import hello.core.discount.DiscountPolicy;
 import hello.core.discount.FixDiscountPolicy;
 import hello.core.member.MemberRepository;
@@ -445,33 +458,46 @@ import hello.core.member.MemberServiceImpl;
 import hello.core.member.MemoryMemberRepository;
 import hello.core.order.OrderService;
 import hello.core.order.OrderServiceImpl;
+
 public class AppConfig {
-public MemberService memberService() {
-return new MemberServiceImpl(memberRepository());
+    
+    public MemberService memberService() {
+        return new MemberServiceImpl(memberRepository());
+    }
+    
+    public OrderService orderService() {
+        return new OrderServiceImpl(
+            memberRepository(),
+            discountPolicy());
+    }
+    
+    public MemberRepository memberRepository() {
+        return new MemoryMemberRepository();
+    }
+    
+    public DiscountPolicy discountPolicy() {
+        return new FixDiscountPolicy();
+    }
 }
-public OrderService orderService() {
-return new OrderServiceImpl(
-memberRepository(),
-discountPolicy());
-}
-public MemberRepository memberRepository() {
-return new MemoryMemberRepository();
-}
-public DiscountPolicy discountPolicy() {
-return new FixDiscountPolicy();
-}
-}
-new MemoryMemberRepository() 이 부분이 중복 제거되었다. 이제 MemoryMemberRepository 를 다
-른 구현체로 변경할 때 한 부분만 변경하면 된다.
-AppConfig 를 보면 역할과 구현 클래스가 한눈에 들어온다. 애플리케이션 전체 구성이 어떻게 되어있는지
-빠르게 파악할 수 있다.
-새로운 구조와 할인 정책 적용
+```
+
+- `new MemoryMemberRepository()` 이 부분이 중복 제거되었다. 이제 `MemoryMemberRepository` 를 다른 구현체로 변경할 때 한 부분만 변경하면 된다.
+- `AppConfig` 를 보면 역할과 구현 클래스가 한눈에 들어온다. 애플리케이션 전체 구성이 어떻게 되어있는지 빠르게 파악할 수 있다.
+
+## 새로운 구조와 할인 정책 적용
+
 처음으로 돌아가서 정액 할인 정책을 정률% 할인 정책으로 변경해보자.
 FixDiscountPolicy RateDiscountPolicy
 어떤 부분만 변경하면 되겠는가?
 AppConfig의 등장으로 애플리케이션이 크게 사용 영역과, 객체를 생성하고 구성(Configuration)하는
 영역으로 분리되었다.
 그림 - 사용, 구성의 분리
+
+![스프링 핵심 원리 이해2 - 09  사용, 구성의 분리](https://user-images.githubusercontent.com/52024566/139690940-a3803933-45a1-4318-88e0-87ac33f1c52f.png)
+![스프링 핵심 원리 이해2 - 10  할인 정책의 변경](https://user-images.githubusercontent.com/52024566/139690942-1bddf581-ba0c-430d-89be-952a5ce7ec07.png)
+![스프링 핵심 원리 이해2 - 11  DI - 클래스 다이어그램](https://user-images.githubusercontent.com/52024566/139690944-000fa1e6-c0a6-42db-a8c5-dccf0ad660c7.png)
+![스프링 핵심 원리 이해2 - 12  DI - 객체 다이어그램](https://user-images.githubusercontent.com/52024566/139690946-2c478ab5-087a-4872-9b5f-2bc7f8277337.png)
+
 그림 - 할인 정책의 변경
 FixDiscountPolicy RateDiscountPolicy 로 변경해도 구성 영역만 영향을 받고, 사용 영역은 전혀
 영향을 받지 않는다.
