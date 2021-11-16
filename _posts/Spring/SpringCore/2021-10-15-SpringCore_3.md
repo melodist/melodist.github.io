@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 스프링 핵심 원리 - 기본편  - 3. 스프링 핵심 원리 이해2 - 객체 지향 원리 적용
-tags: [Spring, SpringCore, UF]
+tags: [Spring, SpringCore]
 permalink: /docs/Spring/SpringCore_3
 date: 2021-10-15 23:30:00
 ---
