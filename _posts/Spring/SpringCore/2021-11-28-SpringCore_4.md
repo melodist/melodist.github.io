@@ -83,164 +83,185 @@ ApplicationContext applicationContext = new AnnotationConfigApplicationContext(A
 
 ```java
 package hello.core.beanfind;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;\
+
 import static org.assertj.core.api.Assertions.assertThat;
-    class ApplicationContextInfoTest {
- AnnotationConfigApplicationContext ac = new
- AnnotationConfigApplicationContext(AppConfig.class);
- @Test
- @DisplayName("모든 빈 출력하기")
- void findAllBean() {
- String[] beanDefinitionNames = ac.getBeanDefinitionNames();
- for (String beanDefinitionName : beanDefinitionNames) {
- Object bean = ac.getBean(beanDefinitionName);
- System.out.println("name=" + beanDefinitionName + " object=" +
- bean);
- }
- }
- @Test
- @DisplayName("애플리케이션 빈 출력하기")
- void findApplicationBean() {
- String[] beanDefinitionNames = ac.getBeanDefinitionNames();
- for (String beanDefinitionName : beanDefinitionNames) {
- BeanDefinition beanDefinition =
- ac.getBeanDefinition(beanDefinitionName);
- //Role ROLE_APPLICATION: 직접 등록한 애플리케이션 빈
- //Role ROLE_INFRASTRUCTURE: 스프링이 내부에서 사용하는 빈
- if (beanDefinition.getRole() == BeanDefinition.ROLE_APPLICATION) {
- Object bean = ac.getBean(beanDefinitionName);
- System.out.println("name=" + beanDefinitionName + " object=" +
- bean);
- }
- }
- }
- }
+
+class ApplicationContextInfoTest {
+    AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(AppConfig.class);
+    
+    @Test
+    @DisplayName("모든 빈 출력하기")
+    void findAllBean() {
+        String[] beanDefinitionNames = ac.getBeanDefinitionNames();
+        for (String beanDefinitionName : beanDefinitionNames) {
+            Object bean = ac.getBean(beanDefinitionName);
+            System.out.println("name=" + beanDefinitionName + " object=" + bean);
+        }
+    }
+    
+    @Test
+    @DisplayName("애플리케이션 빈 출력하기")
+    void findApplicationBean() {
+        String[] beanDefinitionNames = ac.getBeanDefinitionNames();
+        for (String beanDefinitionName : beanDefinitionNames) {
+            BeanDefinition beanDefinition = ac.getBeanDefinition(beanDefinitionName);
+            
+            //Role ROLE_APPLICATION: 직접 등록한 애플리케이션 빈
+            //Role ROLE_INFRASTRUCTURE: 스프링이 내부에서 사용하는 빈
+            if (beanDefinition.getRole() == BeanDefinition.ROLE_APPLICATION) {
+                Object bean = ac.getBean(beanDefinitionName);
+            System.out.println("name=" + beanDefinitionName + " object=" + bean);
+            }
+        }
+    }
+}
+```
+- 모든 빈 출력하기
+    - 실행하면 스프링에 등록된 모든 빈 정보를 출력할 수 있다.
+    - `ac.getBeanDefinitionNames()` : 스프링에 등록된 모든 빈 이름을 조회한다.
+    - `ac.getBean()` : 빈 이름으로 빈 객체(인스턴스)를 조회한다.
+- 애플리케이션 빈 출력하기
+    - 스프링이 내부에서 사용하는 빈은 제외하고, 내가 등록한 빈만 출력해보자.
+    - 스프링이 내부에서 사용하는 빈은 `getRole()` 로 구분할 수 있다.
+        - `ROLE_APPLICATION` : 일반적으로 사용자가 정의한 빈
+        - `ROLE_INFRASTRUCTURE` : 스프링이 내부에서 사용하는 빈
+
+## 스프링 빈 조회 - 기본
+스프링 컨테이너에서 스프링 빈을 찾는 가장 기본적인 조회 방법
+- `ac.getBean(빈이름, 타입)`
+- `ac.getBean(타입)`
+- 조회 대상 스프링 빈이 없으면 예외 발생
+    - `NoSuchBeanDefinitionException: No bean named 'xxxxx' available`
+
+**예제 코드**
+```java
+package hello.core.beanfind;
+
+import hello.core.AppConfig;
+import hello.core.member.MemberService;
+import hello.core.member.MemberServiceImpl;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import static org.assertj.core.api.Assertions.*;
+
+class ApplicationContextBasicFindTest {
+    AnnotationConfigApplicationContext ac = new 
+        AnnotationConfigApplicationContext(AppConfig.class);
+    
+    @Test
+    @DisplayName("빈 이름으로 조회")
+    void findBeanByName() {
+        MemberService memberService = ac.getBean("memberService", MemberService.class);
+        assertThat(memberService).isInstanceOf(MemberServiceImpl.class);
+    }
+    
+    @Test
+    @DisplayName("이름 없이 타입만으로 조회")
+    void findBeanByType() {
+        MemberService memberService = ac.getBean(MemberService.class);
+        assertThat(memberService).isInstanceOf(MemberServiceImpl.class);
+    }
+    
+    @Test
+    @DisplayName("구체 타입으로 조회")
+    void findBeanByName2() {
+        MemberServiceImpl memberService = ac.getBean("memberService", MemberServiceImpl.class);
+        assertThat(memberService).isInstanceOf(MemberServiceImpl.class);
+    }
+    
+    @Test
+    @DisplayName("빈 이름으로 조회X")
+    void findBeanByNameX() {
+        //ac.getBean("xxxxx", MemberService.class);
+        Assertions.assertThrows(NoSuchBeanDefinitionException.class, () ->
+                                ac.getBean("xxxxx", MemberService.class));
+    }
+}
+```
+> 참고: 구체 타입으로 조회하면 변경시 유연성이 떨어진다.
+
+## 스프링 빈 조회 - 동일한 타입이 둘 이상
+- 타입으로 조회시 같은 타입의 스프링 빈이 둘 이상이면 오류가 발생한다. 이때는 빈 이름을 지정하자.
+- `ac.getBeansOfType()` 을 사용하면 해당 타입의 모든 빈을 조회할 수 있다.
+
+**예제 코드**
+```java
+package hello.core.beanfind;
+
+import hello.core.member.MemberRepository;
+import hello.core.member.MemoryMemberRepository;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.NoUniqueBeanDefinitionException;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+class ApplicationContextSameBeanFindTest {
+    AnnotationConfigApplicationContext ac = new
+        AnnotationConfigApplicationContext(SameBeanConfig.class);
+    @Test
+    @DisplayName("타입으로 조회시 같은 타입이 둘 이상 있으면, 중복 오류가 발생한다")
+        void findBeanByTypeDuplicate() {
+        //DiscountPolicy bean = ac.getBean(MemberRepository.class);
+        assertThrows(NoUniqueBeanDefinitionException.class, () ->
+                     ac.getBean(MemberRepository.class));
+    }
+    
+    @Test
+    @DisplayName("타입으로 조회시 같은 타입이 둘 이상 있으면, 빈 이름을 지정하면 된다")
+    void findBeanByName() {
+        MemberRepository memberRepository = ac.getBean("memberRepository1",
+                                                       MemberRepository.class);
+        assertThat(memberRepository).isInstanceOf(MemberRepository.class);
+    }
+    
+    @Test
+    @DisplayName("특정 타입을 모두 조회하기")
+    void findAllBeanByType() {
+        Map<String, MemberRepository> beansOfType = ac.getBeansOfType(MemberRepository.class);
+        for (String key : beansOfType.keySet()) {
+            System.out.println("key = " + key + " value = " + beansOfType.get(key));
+        }
+        System.out.println("beansOfType = " + beansOfType);
+        assertThat(beansOfType.size()).isEqualTo(2);
+    }
+    
+    @Configuration
+    static class SameBeanConfig {
+        @Bean
+        public MemberRepository memberRepository1() {
+            return new MemoryMemberRepository();
+        }
+        
+        @Bean
+        public MemberRepository memberRepository2() {
+            return new MemoryMemberRepository();
+        }
+    }
+}
 ```
 
-   모든 빈 출력하기
-   실행하면 스프링에 등록된 모든 빈 정보를 출력할 수 있다.
-   ac.getBeanDefinitionNames() : 스프링에 등록된 모든 빈 이름을 조회한다.
-   ac.getBean() : 빈 이름으로 빈 객체(인스턴스)를 조회한다.
-   애플리케이션 빈 출력하기
-   스프링이 내부에서 사용하는 빈은 제외하고, 내가 등록한 빈만 출력해보자.
-   스프링이 내부에서 사용하는 빈은 getRole() 로 구분할 수 있다.
-   ROLE_APPLICATION : 일반적으로 사용자가 정의한 빈
-   ROLE_INFRASTRUCTURE : 스프링이 내부에서 사용하는 빈
-   스프링 빈 조회 - 기본
-   스프링 컨테이너에서 스프링 빈을 찾는 가장 기본적인 조회 방법
-   ac.getBean(빈이름, 타입)
-   ac.getBean(타입)
-   조회 대상 스프링 빈이 없으면 예외 발생
-   NoSuchBeanDefinitionException: No bean named 'xxxxx' available
-   예제 코드
-   package hello.core.beanfind;
-   import hello.core.AppConfig;
-   import hello.core.member.MemberService;
-   import hello.core.member.MemberServiceImpl;
-   import org.junit.jupiter.api.Assertions;
-   import org.junit.jupiter.api.DisplayName;
-   import org.junit.jupiter.api.Test;
-   import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-   import
-   org.springframework.context.annotation.AnnotationConfigApplicationContext;
-   import static org.assertj.core.api.Assertions.*;
-   class ApplicationContextBasicFindTest {
-   AnnotationConfigApplicationContext ac = new
-   AnnotationConfigApplicationContext(AppConfig.class);
-   @Test
-   @DisplayName("빈 이름으로 조회")
-   void findBeanByName() {
-   MemberService memberService = ac.getBean("memberService",
-   MemberService.class);
-   assertThat(memberService).isInstanceOf(MemberServiceImpl.class);
-   }
-   @Test
-   @DisplayName("이름 없이 타입만으로 조회")
-   void findBeanByType() {
-   MemberService memberService = ac.getBean(MemberService.class);
-   assertThat(memberService).isInstanceOf(MemberServiceImpl.class);
-   }
-   @Test
-   @DisplayName("구체 타입으로 조회")
-   void findBeanByName2() {
-   MemberServiceImpl memberService = ac.getBean("memberService",
-   MemberServiceImpl.class);
-   assertThat(memberService).isInstanceOf(MemberServiceImpl.class);
-   }
-   @Test
-   @DisplayName("빈 이름으로 조회X")
-   void findBeanByNameX() {
-   //ac.getBean("xxxxx", MemberService.class);
-   Assertions.assertThrows(NoSuchBeanDefinitionException.class, () ->
-   ac.getBean("xxxxx", MemberService.class));
-   }
-   }
+## 스프링 빈 조회 - 상속 관계
+- 부모 타입으로 조회하면, 자식 타입도 함께 조회한다.
+- 그래서 모든 자바 객체의 최고 부모인 `Object` 타입으로 조회하면, 모든 스프링 빈을 조회한다.
 
-> 참고: 구체 타입으로 조회하면 변경시 유연성이 떨어진다.
-> 스프링 빈 조회 - 동일한 타입이 둘 이상
-> 타입으로 조회시 같은 타입의 스프링 빈이 둘 이상이면 오류가 발생한다. 이때는 빈 이름을 지정하자.
-> ac.getBeansOfType() 을 사용하면 해당 타입의 모든 빈을 조회할 수 있다.
-> 예제 코드
-> package hello.core.beanfind;
-> import hello.core.member.MemberRepository;
-> import hello.core.member.MemoryMemberRepository;
-> import org.junit.jupiter.api.DisplayName;
-> import org.junit.jupiter.api.Test;
-> import org.springframework.beans.factory.NoUniqueBeanDefinitionException;
-> import
-> org.springframework.context.annotation.AnnotationConfigApplicationContext;
-> import org.springframework.context.annotation.Bean;
-> import org.springframework.context.annotation.Configuration;
-> import java.util.Map;
-> import static org.assertj.core.api.Assertions.assertThat;
-> import static org.junit.jupiter.api.Assertions.assertThrows;
-> class ApplicationContextSameBeanFindTest {
-> AnnotationConfigApplicationContext ac = new
-> AnnotationConfigApplicationContext(SameBeanConfig.class);
-> @Test
-> @DisplayName("타입으로 조회시 같은 타입이 둘 이상 있으면, 중복 오류가 발생한다")
-> void findBeanByTypeDuplicate() {
-> //DiscountPolicy bean = ac.getBean(MemberRepository.class);
-> assertThrows(NoUniqueBeanDefinitionException.class, () ->
-> ac.getBean(MemberRepository.class));
-> }
-> @Test
-> @DisplayName("타입으로 조회시 같은 타입이 둘 이상 있으면, 빈 이름을 지정하면 된다")
-> void findBeanByName() {
-> MemberRepository memberRepository = ac.getBean("memberRepository1",
-> MemberRepository.class);
-> assertThat(memberRepository).isInstanceOf(MemberRepository.class);
-> }
-> @Test
-> @DisplayName("특정 타입을 모두 조회하기")
-> void findAllBeanByType() {
-> Map<String, MemberRepository> beansOfType =
-> ac.getBeansOfType(MemberRepository.class);
-> for (String key : beansOfType.keySet()) {
-> System.out.println("key = " + key + " value = " +
-> beansOfType.get(key));
-> }
-> System.out.println("beansOfType = " + beansOfType);
-> assertThat(beansOfType.size()).isEqualTo(2);
-> }
-> @Configuration
-> static class SameBeanConfig {
-> @Bean
-> public MemberRepository memberRepository1() {
-> return new MemoryMemberRepository();
-> }
-> @Bean
-> public MemberRepository memberRepository2() {
-> return new MemoryMemberRepository();
-> }
-> }
-> }
-> 스프링 빈 조회 - 상속 관계
-> 부모 타입으로 조회하면, 자식 타입도 함께 조회한다.
-> 그래서 모든 자바 객체의 최고 부모인 Object 타입으로 조회하면, 모든 스프링 빈을 조회한다.
+![스프링 컨테이너와 스프링 빈 - 01  스프링 빈 조회 - 상속 관계](https://user-images.githubusercontent.com/52024566/154706549-9b68049f-ee7b-4da8-9509-8034ae6c8e0b.png)
+
 > 예제 코드
 > package hello.core.beanfind;
 > import hello.core.discount.DiscountPolicy;
@@ -430,7 +451,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 > import org.springframework.beans.factory.config.BeanDefinition;
 > import org.springframework.beans.factory.config.ConstructorArgumentValues;
 > import
-> org.springframework.context.annotation.AnnotationConfigApplicationContext;
+org.springframework.context.annotation.AnnotationConfigApplicationContext;
 > import org.springframework.context.support.GenericXmlApplicationContext;
 > public class BeanDefinitionTest {
 > AnnotationConfigApplicationContext ac = new
