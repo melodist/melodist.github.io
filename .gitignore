@@ -1,4 +1,5 @@
 *.gem
+.ztr-directory
 .bundle
 .ruby-version
 .jekyll-cache
