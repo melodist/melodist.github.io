@@ -122,7 +122,9 @@ compress_html:
 
 # Conversion
 markdown: kramdown
-highlighter: rouge
+kramdown:
+  input: GFM
+  highlighter: rouge
 lsi: false
 excerpt_separator: "\n\n"
 incremental: false
