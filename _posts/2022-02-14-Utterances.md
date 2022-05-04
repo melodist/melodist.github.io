@@ -2,8 +2,8 @@
 
 layout: post
 title: Github Blog에 Utterances 추가
-tags: [Github, Jekyll, Utterances, UF]
-permalink: /docs/DB/MySQLwithDocker
+tags: [Github, Jekyll, Utterances]
+permalink: /docs/etc/GithubUtterances
 date: 2022-02-14 12:05:00
 
 ---
