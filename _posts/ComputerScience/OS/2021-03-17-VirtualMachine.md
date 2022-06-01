@@ -2,7 +2,7 @@
 layout: post
 title: 운영체제 - 가상 머신의 이해
 tags: [OS]
-permalink: /docs/OS/FileSystem
+permalink: /docs/OS/VirtualMachine
 date: 2021-03-17 09:17:00
 ---
 # 가상 머신의 이해
