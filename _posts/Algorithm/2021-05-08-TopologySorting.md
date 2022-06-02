@@ -2,7 +2,7 @@
 layout: post
 title: 위상 정렬
 tags: [Algorithm]
-permalink: docs/Algorithm/Sortings
+permalink: docs/Algorithm/TopologySorting
 use_math: true
 date: 2021-05-08 11:17:00
 ---
