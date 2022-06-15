@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 스프링 핵심 원리 - 기본편  - 8. 빈 생명주기 콜백
-tags: [Spring, SpringCore, UF]
+tags: [Spring, SpringCore]
 permalink: /docs/Spring/SpringCore_8
 date: 2022-06-13 22:20:00
 ---
