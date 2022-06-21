@@ -621,4 +621,54 @@ Error creating bean with name 'myLogger': Scope 'request' is not active for the 
 스프링 애플리케이션을 실행하는 시점에 싱글톤 빈은 생성해서 주입이 가능하지만 request 스코프 빈은 아직 생성되지 않음. 이 빈은 실제 고객의 요청이 와야 생성할 수 있음
 
 ## 스코프와 Provider
+
+첫번째 해결방안은 앞서 배운 Provider를 사용하는 것
+
+**예제 코드**
+```java
+@Controller
+@RequiredArgsConstructor
+public class LogDemoController {
+  
+    private final LogDemoService logDemoService;
+    private final ObjectProvider<MyLogger> myLoggerProvider;
+  
+    @RequestMapping("log-demo")
+    @ResponseBody
+    public String logDemo(HttpServletRequest request) {
+        String requestURL = request.getRequestURL().toString();
+        MyLogger myLogger = myLoggerProvider.getObject();
+        myLogger.setRequestURL(requestURL);
+        myLogger.log("controller test");
+        logDemoService.logic("testId");
+        return "OK";
+    }
+}
+```
+```java
+@Service
+@RequiredArgsConstructor
+public class LogDemoService {
+  
+    private final ObjectProvider<MyLogger> myLoggerProvider;
+  
+    public void logic(String id) {
+        MyLogger myLogger = myLoggerProvider.getObject();
+        myLogger.log("service id = " + id);
+    }
+}
+```
+
+정상 작동함을 확인할 수 있음
+```
+[d06b992f...] request scope bean create
+[d06b992f...][http://localhost:8080/log-demo] controller test
+[d06b992f...][http://localhost:8080/log-demo] service id = testId
+[d06b992f...] request scope bean close
+```
+
+- `ObjectProvider` 덕분에 `ObjectProvider.getObject()`를 호출하는 시점까지 request scope 빈의 생성을 지연
+- `ObjectProvider.getObject()`를 호출하시는 시점에는 HTTP 요청이 진행중이므로 request scope 빈의 생성이 정상 처리
+- `ObjectProvider.getObject()`를 `LogDemoController`, `LogDemoService`에서 각각 한번씩 따로 호출해도 같은 HTTP 요청이면 같은 스프링 빈이 반환됨
+
 ## 스코프와 프록시
