@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 스프링 핵심 원리 - 기본편  - 9. 빈 스코프
-tags: [Spring, SpringCore, UF]
+tags: [Spring, SpringCore]
 permalink: /docs/Spring/SpringCore_9
 date: 2022-06-15 23:31:00
 ---
@@ -672,3 +672,88 @@ public class LogDemoService {
 - `ObjectProvider.getObject()`를 `LogDemoController`, `LogDemoService`에서 각각 한번씩 따로 호출해도 같은 HTTP 요청이면 같은 스프링 빈이 반환됨
 
 ## 스코프와 프록시
+
+```java
+@Component
+@Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
+public class MyLogger {
+}
+```
+
+- `proxyMode = ScopedProxyMode.TARGET_CLASS`를 추가
+  - 적용 대상이 인터페이스가 아닌 클래스면 `TARGET_CLASS`를 선택
+  - 적용 대상이 인터페이스면 `INTERFACES`를 선택
+  - 이렇게 하면 MyLogger의 가짜 프록시 클래스를 만들어두고 HTTP request와 상관 없이 가짜 프록시 클래스를 다른 빈에 미리 주입
+
+**예제 코드**
+```java
+@Controller
+@RequiredArgsConstructor
+public class LogDemoController {
+  
+    private final LogDemoService logDemoService;
+    private final MyLogger myLogger;
+  
+    @RequestMapping("log-demo")
+    @ResponseBody
+    public String logDemo(HttpServletRequest request) {
+        String requestURL = request.getRequestURL().toString();
+        myLogger.setRequestURL(requestURL);
+      
+        myLogger.log("controller test");
+        logDemoService.logic("testId");
+        return "OK";
+    }
+}
+```
+
+```java
+@Service
+@RequiredArgsConstructor
+public class LogDemoService {
+  
+    private final MyLogger myLogger;
+  
+    public void logic(String id) {
+        myLogger.log("service id = " + id);
+    }
+}
+```
+
+### 웹 스코프와 프록시 동작 원리
+
+**myLogger**를 확인.
+```java
+System.out.println("myLogger = " + myLogger.getClass());
+```
+
+**CGLIB라는 라이브러리로 내 클래스를 상속 받은 가짜 프록시 객체를 만들어서 주입**
+
+- `@Scope`의 `proxyMode = ScopedProxyMode.TARGET_CLASS)`를 설정하면 스프링 컨테이너는 CGLIB라는 바이트코드를 조작하는 라이브러리를 사용해서, MyLogger를 상속받은 가짜 프록시 객체를 생성
+- 결과를 확인해보면 개발자가 등록한 순수한 MyLogger 클래스가 아니라 `MyLogger$$EnhancerBySpringCGLIB`이라는 클래스로 만들어진 객체가 대신 등록된 것을 확인할 수 있음
+- 그리고 스프링 컨테이너에 "myLogger"라는 이름으로 진짜 대신에 이 가짜 프록시 객체를 등록
+- `ac.getBean("myLogger", MyLogger.class)`로 조회해도 프록시 객체가 조회되는 것을 확인할 수 있음
+- 그래서 의존관계 주입도 이 가짜 프록시 객체가 주입됨
+
+![빈 스코프 - 10  스코프와 프록시](https://user-images.githubusercontent.com/52024566/174831850-0ab9808a-4273-4999-8922-04df865d2b84.png)
+
+**가짜 프록시 객체는 요청이 오면 그 때 내부에서 진짜 빈을 요청하는 위임 로직이 들어있음**
+- 가짜 프록시 객체는 내부에 진짜 myLogger를 찾는 방법을 알고 있음
+- 클라이언트가 `myLogger.logic()`을 호출하면 사실은 가짜 프록시 객체의 메서드를 호출
+- 가짜 프록시 객체는 request 스코프의 진짜 `myLogger.logic()`를 호출
+- 가짜 프록시 객체는 원본 클래스를 상속 받아서 만들어졌기 때문에 이 객체를 사용하는 클라이언트 입장에서는 사실 원본인지 아닌지도 모르게, 동일하게 사용 가능(다형성)
+
+**동작 정리**
+- CGLIB라는 라이브러리로 내 클래스를 상속 받은 가짜 프록시 객체를 만들어서 주입
+- 이 가짜 프록시 객체는 실제 요청이 오면 그때 내부에서 실제 빈을 요청하는 위임 로직이 들어있음
+- 가짜 프록시 객체는 실제 request scope와는 관계가 없음. 그냥 가짜이고, 내부에 단순한 위임 로직만 있고, 싱글톤 처럼 동작
+
+**특징 정리**
+- 프록시 객체 덕분에 클라이언트는 마치 싱글톤 빈을 사용하듯이 편리하게 request scope를 사용할 수 있음
+- 사실 Provider를 사용하든, 프록시를 사용하든 핵심 아이디어는 진짜 객체 조회를 꼭 필요한 시점까지 지연처리 한다는 점
+- 단지 애노테이션 설정 변경만으로 원본 객체를 프록시 객체로 대체할 수 있음. 이것이 바로 다형성과 DI 컨테이너가 가진 큰 강점
+- 꼭 웹 스코프가 아니어도 프록시는 사용할 수 있음
+
+**주의점**
+- 마치 싱글톤을 사용하는 것 같지만 다르게 동작하기 때문에 결국 주의해서 사용해야 함
+- 이런 특별한 scope는 꼭 필요한 곳에만 최소화해서 사용, 무분별하게 사용하면 유지보수하기 어려움
