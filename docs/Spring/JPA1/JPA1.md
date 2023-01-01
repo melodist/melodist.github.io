@@ -1,7 +1,7 @@
 ---
 layout: default
 title: 실전! 스프링 부트와 JPA 활용1 - 웹 애플리케이션 개발
-nav_order: 6
+nav_order: 7
 parent: Spring
 permalink: docs/Spring/JPA1
 ---
