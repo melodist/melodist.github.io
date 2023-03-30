@@ -6,6 +6,7 @@ permalink: /docs/Spring/TobySpringBoot_3
 date: 2022-03-28 22:05:00
 ---
 # 독립 실행형 서블릿 애플리케이션
+- 서블릿이란? 클라이언트의 요청을 처리하고, 그 결과를 반환하는 Servlet 클래스의 구현 규칙을 지킨 자바 웹 프로그래밍 기술
 ## Containerless 개발 준비
 - 컨테이너 설치와 배포 등의 작업을 하지 않고 서블릿 컨테이너를 동작시키는 방법을 코드로 구현
 - 스프링 부트가 사용하는 것으로 보이는 다음 두 라인을 제거하고 빈 main() 메소드만 남김
@@ -72,3 +73,50 @@ resp.setContentType(MediaType.TEXT_PLAIN_VALUE);
 ```java
 String name = req.getParameter("name");
 ```
+## 프론트 컨트롤러
+![독립 실행형 서블릿 애플리케이션 - 01  프론트 컨트롤러](https://user-images.githubusercontent.com/52024566/228852581-47e57ba6-8ffd-42bd-9050-33d8a71262ea.png)
+
+- 여러 요청을 처리할 때 반복적으로 등장하게 되는 공통 작업을 하나의 오브젝트에서 일괄적으로 처리하게 만드는 방식
+- https://martinfowler.com/eaaCatalog/frontController.html
+- 서블릿을 프론트 컨트롤러로 만들려면 모든 요청, 혹은 일정 패턴을 가진 요청을 하나의 서블릿이 담당하도록 매핑
+## 프론트 컨트롤러로 전환
+- 프론트 컨트롤러가 모든 URL을 다 처리할 수 있도록 서블릿 바인딩을 변경
+- 서블릿 내에서 HTTP 요청 정보를 이용해서 각 요청을 분리
+- 만약 처리할 수 있는 HTTP 요청 정보가 없다면 상태 코드를 404로 설정
+
+```java
+servletContext.addServlet("hello", new HttpServlet() {
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (req.getRequestURI().equals("/hello") && req.getMethod().equals(HttpMethod.GET.name())) {
+            ...
+        }
+        else if (req.getRequestURI().equals("/user")) {
+            ...
+        }
+        else {
+            resp.setStatus(HttpStatus.NOT_FOUND.value());
+        }
+    }
+}).addMapping("/*");
+```
+## Hello 컨트롤러 매핑과 바인딩
+- 프론트 컨트롤러가 요청을 분석해서 처리할 요청을 구분한 뒤에 이를 처리할 핸들러(컨트롤러 메소드)로 요청을 전달
+- 핸들러가 처리하고 돌려준 리턴 값을 해석해서 웹 요청을 생성
+- 프론트 컨트롤러가 HTTP 요청을 처리할 핸들러를 결정하고 연동하는 작업을 매핑이라고 함
+- 핸들러에게 웹 요청 정보를 추출하고 의미있는 오브젝트에 담아서 전달하는 작업을 바인딩이라고 함
+- 프론트 컨트롤러의 두 가지 중요한 기능은 매핑과 바인딩
+
+```java
+if (req.getRequestURI().equals("/hello") && req.getMethod().equals(HttpMethod.GET.name())) {
+    String name = req.getParameter("name");
+  
+    String ret = helloController.hello(name);
+  
+    resp.setStatus(HttpStatus.OK.value());
+    resp.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
+    resp.getWriter().println(ret);
+}
+```
+
+매핑과 바인딩은 세밀한 규칙을 부여하면 매번 코드를 작성하지 않고도 공통 코드를 이용해서 이를 처리할 수 있도록 만들 수 있음
