@@ -51,3 +51,55 @@ https://martinfowler.com/articles/injection.html
 ![독립 실행형 스프링 애플리케이션 - 03  Dependency Injection](https://user-images.githubusercontent.com/52024566/229536433-a190314b-9508-4044-b243-a591d8afcf43.png)
 
 - 이제 `SimpleHelloService`도 빈으로 등록을 하고 구현한 인터페이스 타입의 의존 오브젝트로 `HelloController`에 주입해서 사용되도록 함. 주입 방식은 컨트롤러의 파라미터를 이용할 수 있음
+## 의존 오브젝트 DI 적용
+- 의존 오브젝트를 생성자를 통해서 DI 어셈블러인 컨테이너가 주입을 할 수 있게 생성자 파라미터를 정의
+- 주입 받은 오브젝트는 내부 멤버 필드로 저장해두고 이용할 수 있음
+
+```java
+public class HelloController {
+    private final HelloService helloService;
+  
+    public HelloController(HelloService helloService) {
+        this.helloService = helloService;
+    }
+  
+    public String hello(String name) {
+        return helloService.sayHello(Objects.requireNonNull(name));
+    }
+}
+```
+
+- 주입 받은 의존 오브젝트는 외부에 노출할 필요가 없으니 `private`으로, 이후 변경될 이유도 없으니 `final`로 정의
+- 스프링 컨테이너는 빈 오브젝트 사이의 의존관계를 여러 방법을 통해서 자동으로 파악. 만약 빈 클래스가 단일 생성자를 가지고 있다면 생성자의 파라미터 타입의 빈 오브젝트가 있는지 확인하고, 있다면 이를 생성자 호출시 주입
+- 명시적으로 의존 오브젝트를 주입하는 정보를 컨테이너에게 제공하려면 `@Autowired`와 같은 애노테이션을 지정할 수 있음
+## DispatcherServlet으로 전환
+https://docs.spring.io/spring-framework/docs/5.3.x/javadoc-api/org/springframework/web/servlet/DispatcherServlet.html
+
+- 스프링에는 앞에서 만들었던 프론트 컨트롤러와 같은 역할을 담당하는 `DispatcherServlet`이 있음
+- `DispatcherServlet`은 서블릿으로 등록되어서 동작하면서 스프링 컨테이너를 이용해서 요청을 전달할 핸들러인 컨트롤러 오브젝트를 가져와 사용
+- `DispatcherServlet`이 사용하는 스프링 컨테이너는 `GenericWebApplicationContext`를 이용해서 작성
+
+```java
+GenericWebApplicationContext applicationContext = new GenericWebApplicationContext();
+applicationContext.registerBean(HelloController.class);
+applicationContext.registerBean(SimpleHelloService.class);
+applicationContext.refresh();
+```
+## 애노테이션 매핑 정보 사용
+- `DispatcherServlet`은 스프링 컨테이너에 등록된 빈 클래스에 있는 매핑 애노테이션 정보를 참고해서 웹 요청을 전달할 오브젝트와 메소드를 선정할 수 있음
+
+```java
+@RequestMapping("/hello")
+public class HelloController {
+    ...
+    @GetMapping
+    @ResponseBody
+    public String hello(String name) {
+        return helloService.sayHello(Objects.requireNonNull(name));
+    }
+}
+```
+
+- 클래스 레벨의 `@RequestMapping`과 메소드 레벨의 `@GetMapping` 두 가지의 정보를 조합해서 매핑에 사용할 최종 정보를 생성
+- 컨트롤러 메소드의 리턴값을 웹 요청의 바디에 적용하도록 `@ResponseBody`를 넣어줘야 함. 그렇지 않으면 `String` 타입의 응답은 뷰 이름으로 해석하고 `Thymeleaf`와 같은 뷰 템플릿을 찾으려고 하고 404 에러가 나올 수 있음
+- 처음 사용한 `@RestController`는 `@ResponseBody`를 포함하고 있기 때문에 메소드 레벨의 `@ResponseBody`를 넣지 않아도 적용된 것처럼 동작
