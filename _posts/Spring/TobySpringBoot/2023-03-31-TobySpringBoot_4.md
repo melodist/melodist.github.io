@@ -103,3 +103,45 @@ public class HelloController {
 - 클래스 레벨의 `@RequestMapping`과 메소드 레벨의 `@GetMapping` 두 가지의 정보를 조합해서 매핑에 사용할 최종 정보를 생성
 - 컨트롤러 메소드의 리턴값을 웹 요청의 바디에 적용하도록 `@ResponseBody`를 넣어줘야 함. 그렇지 않으면 `String` 타입의 응답은 뷰 이름으로 해석하고 `Thymeleaf`와 같은 뷰 템플릿을 찾으려고 하고 404 에러가 나올 수 있음
 - 처음 사용한 `@RestController`는 `@ResponseBody`를 포함하고 있기 때문에 메소드 레벨의 `@ResponseBody`를 넣지 않아도 적용된 것처럼 동작
+## 스프링 컨테이너로 통합
+- 스프링 컨테이너의 초기화 작업 중에 호출되는 훅 메소드에 서블릿 컨테이너(톰캣)을 초기화하고 띄우는 코드를 삽입
+
+```java
+GenericWebApplicationContext applicationContext = new GenericWebApplicationContext() {
+    @Override
+    protected void onRefresh() {
+        super.onRefresh();
+        ServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
+        WebServer webServer = serverFactory.getWebServer(servletContext -> {
+            servletContext.addServlet("dispatcherServlet",
+                    new DispatcherServlet(this))
+                .addMapping("/*");
+        });
+        webServer.start();
+    }
+};
+```
+
+- `DispatcherServlet`를 생성할 때는 현재 실행중인 메소드가 속한 컨테이너 자체를 전달하면 되기 때문에 `this`를 전달할 수 있음
+## 자바 코드 구성 정보 사용
+- `@Bean` 팩토리 메소드를 사용하면 자바 코드를 이용해서 구성 정보를 만들 수 있음
+- 자바 코드를 이용하기 때문에 빈 오브젝트를 직접 생성하고 초기화하는 등의 작업을 명시적으로 작성할 수 있음
+
+```java
+@Configuration
+public class HellobootApplication {
+    @Bean
+    public HelloController helloController(HelloService helloService) {
+        return new HelloController(helloService);
+    }
+  
+    @Bean
+    public HelloService helloService() {
+        return new SimpleHelloService();
+    }
+```
+
+- `@Bean` 메소드의 리턴 타입은 이 빈을 의존 오브젝트로 주입 받을 다른 빈에서 참조하는 타입(주로 인터페이스)으로 지정하는 것이 좋음
+- 빈 오브젝트를 생성할 때 주입할 의존 오브젝트는 `@Bean` 메소드의 파라미터로 정의하면 스프링 컨테이너가 이를 전달
+- `@Bean` 메소드가 있는 클래스에는 `@Configuration` 애노테이션을 붙여줘야 함
+- 자바 코드를 이용한 구성 정보를 사용하려면 `AnnotationConfigWebApplicationContext` 클래스로 컨테이너를 만들어야 함
