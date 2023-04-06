@@ -145,3 +145,106 @@ public class HellobootApplication {
 - 빈 오브젝트를 생성할 때 주입할 의존 오브젝트는 `@Bean` 메소드의 파라미터로 정의하면 스프링 컨테이너가 이를 전달
 - `@Bean` 메소드가 있는 클래스에는 `@Configuration` 애노테이션을 붙여줘야 함
 - 자바 코드를 이용한 구성 정보를 사용하려면 `AnnotationConfigWebApplicationContext` 클래스로 컨테이너를 만들어야 함
+## @Component 스캔
+- 클래스에 일종의 레이블에 해당하는 애노테이션을 붙여주고, 이를 스캔해서 스프링 컨테이너의 빈으로 자동 등록해주는 방법을 사용할 수 있음
+- 애플리케이션의 메인 클래스에는 `@ComponentScan` 애노테이션을 붙임
+
+```java
+@Configuration
+@ComponentScan
+public class HellobootApplication {
+```
+
+- 등록 대상이 될 클래스에는 `@Component` 애노테이션을 붙임
+- `@Component`를 메타 애노테이션으로 가지고 있는 애노테이션도 사용할 수 있음
+  - 스프링이 제공하는 `@Controller`, `@RestController`, `@Service` 등
+
+```java
+@Service
+public class SimpleHelloService implements HelloService {
+```
+
+```java
+@RestController
+public class HelloController {
+```
+
+- 스캔을 통해서 빈을 등록하는 것은 매우 편리하지만 어떤 빈이 등록되는지 확인하려면 번거로울 수 있음
+- 메타 애노테이션은 애노테이션에 붙은 애노테이션
+- 애노테이션을 정의할 때는 `@Retention`과 `@Target`을 지정
+
+### @Retention과 @Target
+- `@Retention`:  애노테이션이 선언된 대상(`@Target`)의 유지 기간을 결정
+  - `RetentionPolicy.SOURCE`: 자바코드를 컴파일할 때 버림
+  - `RetentionPolicy.CLASS`: JVM이 바이트코드를 해석해서 동작하는 런타임 단계에서 버림
+  - `RetentionPolicy.RUNTIME`: 런타임이 종료되는 시점에서 버림
+
+- `@Target`: 애노테이션이 적용될 대상을 지정
+  - `TYPE`: 클래스, 인터페이스
+  - `FIELD`: 상수 포함 객체 필드
+  - `METHOD`: 메소드
+  - `PARAMETER`: 파라미터
+
+- 메타 애노테이션은 여러 단계로 중첩되기도 함
+- `@RestController`은 `@Controller`를 메타 애노테이션으로 가지고 있고, `@Controller`는 `@Component`를 메타 애노테이션으로 가지고 있음
+- 이 경우에 `@RestController`는 `@Component` 애노테이션이 붙은 것과 같은 효과를 가짐
+- `@RestController`는 `@Controller` 외에 `@ResponseBody`도 메타 애노테이션으로 가짐
+
+```java
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Controller
+@ResponseBody
+public @interface RestController {
+```
+
+- `@RestController`가 붙은 경우엔 `DispatcherServlet`의 매핑 정보 탐색 대상이 되므로 클래스 레벨에 매핑 애노테이션(`@RequestMapping`)을 붙이지 않아도 됨
+## Bean의 생명주기 메소드
+- 톰캣 서블릿 서버팩토리와 `DispatcherServlet`도 빈으로 등록한 뒤 가져와 사용할 수 있음
+- `@Bean` 메소드에서 독립적으로 생성되게 하는 경우 `DispatcherServlet`이 필요로 하는 `WebApplicationContext` 타입 컨테이너 오브젝트는 스프링 컨테이너의 빈 생애주기 메소드를 이용해서 주입 받음
+- `DispatcherServlet`은 `ApplicationContextAware`라는 스프링 컨테이너를 setter 메소드로 주입해주는 메소드를 가진 인터페이스를 구현해놨고, 이런 생애주기 빈 메소드를 가진 빈이 등록되면 스프링은 자신을 직접 주입
+- 스프링이 제공하는 생애주기 메소드는 다음과 같은 것들이 있음
+```
+BeanNameAware's setBeanName
+BeanClassLoaderAware's setBeanClassLoader
+BeanFactoryAware's setBeanFactory
+EnvironmentAware's setEnvironment
+EmbeddedValueResolverAware's setEmbeddedValueResolver
+ResourceLoaderAware's setResourceLoader (only applicable when running in an application context)
+ApplicationEventPublisherAware's setApplicationEventPublisher (only applicable when running in an application context)
+MessageSourceAware's setMessageSource (only applicable when running in an application context)
+ApplicationContextAware's setApplicationContext (only applicable when running in an application context)
+ServletContextAware's setServletContext (only applicable when running in a web application context)
+postProcessBeforeInitialization methods of BeanPostProcessors
+InitializingBean's afterPropertiesSet
+a custom init-method definition
+postProcessAfterInitialization methods of BeanPostProcessors
+```
+
+- 빈 생애주기 메소드를 통해서 주입되는 오브젝트는, 스프링 컨테이너가 스스로 빈으로 등록해서 빈으로 가져와 사용할 수도 있게 함
+## SpringApplication
+- 지금까지 구현한 `main()`의 코드를 `MySpringApplication` 클래스를 만들어 `run()` 메소드로 넣고, 메인 클래스를 파라미터로 받아서 사용하도록 만들면, 스프링 부트의 `main()` 메소드가 있는 클래스와 유사한 코드가 만들어짐
+- 다른 점은 애노테이션이 2개가 붙어있다는 것과 서블릿 컨테이너와 `DispatcherServlet`을 만드는 `@Bean` 메소드가 들어있는 것
+
+```java
+@Configuration
+@ComponentScan
+public class HellobootApplication {
+    @Bean
+    public ServletWebServerFactory servletWebServerFactory() {
+        return new TomcatServletWebServerFactory();
+    }
+  
+    @Bean
+    public DispatcherServlet dispatcherServlet() {
+        return new DispatcherServlet();
+    }
+  
+    public static void main(String[] args) {
+        MySpringApplication.run(HellobootApplication.class, args);
+    }
+}
+```
+
+- `MySpringApplication`은 스프링 부트의 `SpringApplication` 클래스로 교체해도 동일하게 동작
