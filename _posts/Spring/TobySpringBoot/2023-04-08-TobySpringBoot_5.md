@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 토비의 스프링 부트 - 이해와 원리 05. DI와 테스트, 애노테이션 활용
-tags: [Spring, TobySpringBoot, UF]
+tags: [Spring, TobySpringBoot]
 permalink: /docs/Spring/TobySpringBoot_5
 date: 2022-04-08 12:21:00
 ---
@@ -58,3 +58,46 @@ void helloController() {
 ```
 
 - 예외가 발생하는, 실패한 경우에 대한 테스트도 작성해야 함
+## DI를 이용한 Decorator 패턴과 Proxy 패턴
+### Decorator Pattern
+- 기존 코드에 동적으로 책임을 추가할 때 쓰는 패턴
+- 오브젝트 합성 구조로 확장이 가능하도록 설계되어있고 DI를 적용해서 의존관계를 런타임에 주입할 수 있다면 의존 오브젝트와 동일한 인터페이스를 구현한 확장기능(데코레이터)을 동적으로 추가할 수 있음. 재귀적인 구조로 여러 개의 책임을 부가하는 것도 가능
+
+```java
+@Service
+@Primary
+public class HelloDecorator implements HelloService {
+    private final HelloService helloService;
+
+    public HelloDecorator(HelloService helloService) {
+        this.helloService = helloService;
+    }
+
+    @Override
+    public String sayHello(String name) {
+        return "*" + helloService.sayHello(name) + "*";
+    }
+}
+```
+
+![DI와 테스트 애노테이션 활용 - 01  DI를 이용한 Decorator 패턴과 Proxy 패턴](https://user-images.githubusercontent.com/52024566/230919376-19230e35-f8c0-43d0-805b-06b925235830.png)
+
+- 데코레이터는 자기가 구현하는 인터페이스 타입의 다른 오브젝트를 의존
+- 추가 책임, 기능의 적용 중에 의존 오브젝트를 호출
+
+![DI와 테스트 애노테이션 활용 - 02  DI를 이용한 Decorator 패턴과 Proxy 패턴](https://user-images.githubusercontent.com/52024566/230919381-465ef17e-a7a8-498e-9ea1-d91d95ddf9a7.png)
+![DI와 테스트 애노테이션 활용 - 03  DI를 이용한 Decorator 패턴과 Proxy 패턴](https://user-images.githubusercontent.com/52024566/230919385-f2d2a4c6-ab1f-4bdf-9228-ffd6397e80e3.png)
+
+### @Primary
+여러 개의 DI 후보 오브젝트가 있을 때 우선순위를 부여해서 단일 의존 오브젝트로 취급될
+수 있게 하는 식별자
+
+### Proxy Pattern
+- 프록시 패턴에서 프록시는 다른 오브젝트의 대리자 혹은 플레이스 홀더 역할을 함
+- 프록시는 리모트 오브젝트에 대한 로컬 접근이 가능하게 하거나, 필요가 있을 때만 대상 오브젝트를 생성하는 필요가 있을 때 사용할 수 있음
+- 보안이나 접속 제어 등에 사용하기도 함
+
+![DI와 테스트 애노테이션 활용 - 04  Proxy Pattern](https://user-images.githubusercontent.com/52024566/230919387-191205ba-2126-4177-a46e-27a9baf2c03f.png)
+![DI와 테스트 애노테이션 활용 - 05  Proxy Pattern](https://user-images.githubusercontent.com/52024566/230919388-c6bcc43d-f581-4954-bf6e-872f493fa927.png)
+
+- 프록시 패턴의 프록시와 일반적용 용어 프록시, 자바의 다이나믹 프록시는 다름
