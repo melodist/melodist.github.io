@@ -86,3 +86,24 @@ class BooleanCondition implements Condition {
     }
 }
 ```
+## 커스톰 @Conditional
+### 클래스 기준 조건부 구성
+- 스프링 부트가 사용하는 `@Conditional`의 가장 대표적인 방법은 클래스의 존재를 확인하는 것
+- 스타터를 이용하거나 직접 의존 라이브러리 등록을 통해서 어떤 기술의 클래스를 애플리케이션이 사용하도록 포함시켰다면, 이 기술을 사용할 의도가 있다는 것으로 보고 관련 자동 구성 클래스를 등록
+- Tomcat과 Jetty 중에서 어떤 서블릿 컨테이너를 사용할지는 해당 서버 라이브러리 클래스가 프로젝트에 포함되어있는지를 확인하는 방법을 사용
+- 특정 클래스가 현재 프로젝트에 포함되어서 클래스패스에 존재하는지 확인할 때는 스프링 `ClassUtils.isPresent()`를 사용
+
+```java
+public class MyOnClassCondition implements Condition {
+    @Override
+    public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+        Map<String, Object> attrs = metadata.getAnnotationAttributes(ConditionalMyOnClass.class.getName());
+        String value = (String) attrs.get("value");
+        return ClassUtils.isPresent(value, context.getClassLoader());
+    }
+}
+```
+
+커스톰 @Conditional을 사용할 때의 동작 방식
+
+![조건부 자동 구성 - 04  커스톰 @Conditional](https://user-images.githubusercontent.com/52024566/232524038-5fc88826-4882-4b83-ac1f-83c858b4c505.png)
