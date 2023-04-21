@@ -53,3 +53,58 @@ public class PropertyPlaceholderConfig {
     }
 }
 ```
+## 프로퍼티 클래스의 분리
+- 자동 구성에 적용할 프로퍼티의 갯수가 많아지고 프로퍼티를 처리할 로직이 추가되야 한다면, 프로퍼티를 다루는 기능을 별도의 클래스로 분리하는 것이 좋음
+- 기본적인 프로퍼티 클래스는 프로퍼티 값을 가지고 있는 단순한 클래스로 작성할 수 있음
+
+```java
+public class ServerProperties {
+  
+    private String contextPath;
+    private int port;
+  
+    public String getContextPath() {
+        return contextPath;
+    }
+  
+    public void setContextPath(String contextPath) {
+        this.contextPath = contextPath;
+    }
+  
+    public int getPort() {
+        return port;
+    }
+  
+    public void setPort(int port) {
+        this.port = port;
+    }
+}
+```
+
+- 이 클래스를 빈으로 등록하는 자동 구성 클래스를 추가
+- `Environment`에서 프로퍼티 값을 가져와 오브젝트에 주입하는 것은 스프링 부트의 `Binder` 클래스를 이용하면 편리
+
+```java
+@MyAutoConfiguration
+public class ServerPropertiesConfig {
+    @Bean
+    public ServerProperties serverProperties(Environment environment) {
+        return Binder.get(environment).bind("", ServerProperties.class).get();
+    }
+}
+```
+
+- 프로퍼티 클래스로 만든 빈은 자동 구성 빈을 만들 때 주입 받아서 사용
+
+```java
+@Bean("tomcatWebServerFactory")
+@ConditionalOnMissingBean
+public ServletWebServerFactory servletWebServerFactory(ServerProperties properties) {
+    TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();
+  
+    factory.setContextPath(properties.getContextPath());
+    factory.setPort(properties.getPort());
+  
+    return factory;
+}
+```
