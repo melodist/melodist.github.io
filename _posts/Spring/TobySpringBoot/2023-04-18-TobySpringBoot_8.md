@@ -1,9 +1,9 @@
 ---
 layout: post
 title: 토비의 스프링 부트 - 이해와 원리 08. 외부 설정을 활용하는 자동 구성
-tags: [Spring, TobySpringBoot, UF]
+tags: [Spring, TobySpringBoot]
 permalink: /docs/Spring/TobySpringBoot_8
-date: 2022-04-19 23:05:00
+date: 2022-04-18 23:05:00
 ---
 # 외부 설정을 활용하는 자동 구성
 ## 스프링의 Environment 추상화
@@ -108,3 +108,66 @@ public ServletWebServerFactory servletWebServerFactory(ServerProperties properti
     return factory;
 }
 ```
+## 프로퍼티 빈의 후처리기 도입
+- 프로퍼티 클래스를 빈 등록을 위한 자동 구성을 따로 만드는 필요한 곳에서 `@Import`해서 사용할 수 있음
+- `@MyConfigurationProperties`라는 마커 애노테이션을 만들고, 이를 `BeanPostProcessor`를 만들어서 빈 오브젝트 생성 후에 후처리 작업을 진행
+
+```java
+public interface BeanPostProcessor {
+    default Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        return bean;
+    }
+  
+    default Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        return bean;
+    }
+}
+```
+
+- 마커 애노테이션을 찾아서 프로퍼티를 주입하는 기능을 이 인터페이스를 구현해서 만들고 자동 구성으로 등록되게 함
+
+```java
+@MyAutoConfiguration
+public class PropertyPostProcessorConfig {
+    @Bean BeanPostProcessor propertyPostProcessor(Environment env) {
+        return new BeanPostProcessor() {
+            @Override
+            public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+                MyConfigurationProperties annotation = findAnnotation(bean.getClass(), MyConfigurationProperties.class);
+                if (annotation == null) return bean;
+
+                Map<String, Object> attrs = getAnnotationAttributes(annotation);
+                String prefix = (String) attrs.get("prefix");
+              
+                return Binder.get(env).bindOrCreate(prefix, bean.getClass());
+            }
+        };
+    }
+}
+```
+
+- 마커 애노테이션에 `prefix` 엘리먼트를 지정하게 하고, 이를 이용해서 프로퍼티 이름 앞에 접두어를 붙이도록 할 수 있음
+
+```java
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@Component
+public @interface MyConfigurationProperties {
+    String prefix();
+}
+```
+
+- 애노테이션과 `ImportSelector`를 조합해서 애노테이션의 엘리먼트 값으로 지정한 클래스를 빈으로 등록하는 방법도 가능
+
+```java
+public class MyConfigurationPropertiesImportSelector implements DeferredImportSelector {
+    @Override
+    public String[] selectImports(AnnotationMetadata importingClassMetadata) {
+        MultiValueMap<String, Object> attr = importingClassMetadata.getAllAnnotationAttributes(EnableMyConfigurationProperties.class.g
+        Class propertyClass = (Class) attr.getFirst("value");
+        return new String[] { propertyClass.getName() };
+    }
+}
+```
+
+- 이때는 기본 엘리먼트 타입을 `Class` 타입으로 만들어 사용
