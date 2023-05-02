@@ -53,3 +53,26 @@ public class HelloApiTest {
 - `ConditionEvaluationReport` 타입의 빈을 주입 받아서 필요한 정보만 선택해서 자동 구성 결과를 보는 것도 가능
 - 최종적으로 등록된 빈 목록을 보고 싶으면 `ListableBeanFactory` 타입의 빈을 주입 받아서 빈 이름을 모두 가져오고, 필요하면 빈 오브젝트도 가져와서 살펴볼 수 있음
 - 자동 구성 선정 결과를 기준으로 스프링 부트 레퍼런스 문서, 그리고 자동 구성 클래스의 소스 코드, 프로퍼티 클래스, 커스토마이저 등을 차근차근 따라서 살펴보면서 어떻게 어떤 조건으로 동작할지 분석
+
+## 자동 구성 조건 결과 확인
+- `ConditionEvaluationReport`를 이용해서 조건이 매칭된 자동 구성 클래스와 메소드를 출력하는 코드를 작성할 수 있음
+- 그 중에서 Jmx 관련 구성 정보는 제외하고 싶으면 아래와 같이 코드를 작성
+
+```java
+@Bean ApplicationRunner run(ConditionEvaluationReport report) {
+    return args -> {
+        System.out.println(report.getConditionAndOutcomesBySource().entrySet().stream()
+            .filter(co -> co.getValue().isFullMatch())
+            .filter(co -> co.getKey().indexOf("Jmx") < 0)
+            .map(co -> {
+                System.out.println(co.getKey());
+                co.getValue().forEach(c -> {
+                System.out.println("\t" + c.getOutcome());
+                });
+                System.out.println();
+                return co;
+        }).count());
+    };
+}
+```
+
