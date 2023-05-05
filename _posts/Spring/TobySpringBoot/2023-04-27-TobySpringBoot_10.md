@@ -75,4 +75,11 @@ public class HelloApiTest {
     };
 }
 ```
+## Core 자동 구성 살펴보기
+- `@ConditionalOnProperty` 조건인 경우 m`atchIfMissing = true`라면 프로퍼티가 존재하지 않아도 조건이 매칭
 
+```java
+@AutoConfiguration
+@ConditionalOnProperty(prefix = "spring.aop", name = "auto", havingValue = "true", matchIfMissing = true)
+public class AopAutoConfiguration {
+```
