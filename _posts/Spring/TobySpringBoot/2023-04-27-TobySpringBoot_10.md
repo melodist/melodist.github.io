@@ -76,10 +76,17 @@ public class HelloApiTest {
 }
 ```
 ## Core 자동 구성 살펴보기
-- `@ConditionalOnProperty` 조건인 경우 m`atchIfMissing = true`라면 프로퍼티가 존재하지 않아도 조건이 매칭
+- `@ConditionalOnProperty` 조건인 경우 `matchIfMissing = true`라면 프로퍼티가 존재하지 않아도 조건이 매칭
 
 ```java
 @AutoConfiguration
 @ConditionalOnProperty(prefix = "spring.aop", name = "auto", havingValue = "true", matchIfMissing = true)
 public class AopAutoConfiguration {
 ```
+
+- `SimpleCacheConfiguration`: 캐시 관련 라이브러리를 포함하지 않았을 때 사용할 수 있는 간단한 캐시
+- `LifecycleAutoConfiguration`: 스프링이 제공하는 컨테이너 라이프사이클 관련 빈
+- `PropertyPlaceholderAutoConfiguration`
+- `TaskExecutionAutoConfiguration`
+  - `ThreadPoolTaskExecutor`: `@EnableAsync`, `@EnableScheduling`에서 사용하는 `TaskExecutor` 제공
+  - `TaskExecutorBuilder`: `TaskExecutor` 생성하는 Builder
