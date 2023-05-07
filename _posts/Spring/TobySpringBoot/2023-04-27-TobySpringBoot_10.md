@@ -90,3 +90,29 @@ public class AopAutoConfiguration {
 - `TaskExecutionAutoConfiguration`
   - `ThreadPoolTaskExecutor`: `@EnableAsync`, `@EnableScheduling`에서 사용하는 `TaskExecutor` 제공
   - `TaskExecutorBuilder`: `TaskExecutor` 생성하는 Builder
+## Web 자동 구성 살펴보기
+- 웹 스타터를 추가하기만 해도 50개 가까운 자동 구성 클래스와 빈 메소드 조건이 추가
+- `@ConditionalOnClass` 등이 붙은 클래스에 `@Import`가 붙어있는 경우엔 클래스 레벨의 조건이 모두 만족하는 경우 `@Import`가 동작해서 자동 구성을 추가
+
+```java
+@AutoConfiguration(
+  after = { GsonAutoConfiguration.class, JacksonAutoConfiguration.class, JsonbAutoConfiguration.class })
+@ConditionalOnClass(HttpMessageConverter.class)
+@Conditional(NotReactiveWebApplicationCondition.class)
+@Import({ JacksonHttpMessageConvertersConfiguration.class, GsonHttpMessageConvertersConfiguration.class, JsonbHttpMessageConvertersConfiguration.class })
+public class HttpMessageConvertersAutoConfiguration {
+```
+
+- `Customizer` 빈을 이용하는 자동 구성은 프로퍼티 빈을 `Customizer`가 주입을 받고, 이를 빈 오브젝트를 만드는 메소드에서 `Customizer`를 주입 받아서 프로퍼티 설정 로직을 적용하는 방식으로 동작
+- 최종 빈 오브젝트를 만드는 `Builder`를 빈으로 등록하는 경우도 있음. 이 빌더 빈을 애플리케이션에서 가져다 사용해서 빈 오브젝트를 직접 구성하는 것도 가능
+- `RestTemplateBuilder`처럼 빌더만 자동 구성으로 제공하는 경우도 있음
+
+```java
+@Bean
+@Lazy
+@ConditionalOnMissingBean
+public RestTemplateBuilder restTemplateBuilder(RestTemplateBuilderConfigurer restTemplateBuilderConfigurer) {
+    RestTemplateBuilder builder = new RestTemplateBuilder();
+    return restTemplateBuilderConfigurer.configure(builder);
+}
+```
