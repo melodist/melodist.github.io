@@ -116,3 +116,21 @@ public RestTemplateBuilder restTemplateBuilder(RestTemplateBuilderConfigurer res
     return restTemplateBuilderConfigurer.configure(builder);
 }
 ```
+## Jdbc 자동 구성 살펴보기
+- `DataSource` 자동 구성에서 `driver class name`을 프로퍼티에 넣지 않으면 `url`을 이용해서 드라이버와 클래스 이름을 넣어줌
+- 내장형 DB를 사용하는 경우에 `DataSource` 프로퍼티가 없으면 스프링 부트가 자동으로 연결 정보를 설정
+- `JdbcTransactionManager`는 기존 `DataSourceTransactionManager`에 예외 추상화 작업의 변경이 반영
+  - 기존 버전과 호환을 위해서 프로퍼티를 지정한 경우에만 선택됨
+- `@AutoConfiguration`은 자동 구성을 진행할 전후 순서를 지정할 수 있음
+
+```java
+@AutoConfiguration(after = DataSourceAutoConfiguration.class)
+```
+
+- `TransactionProperties`는 `PlatformTransactionManagerCustomizer`를 구현
+- 프로퍼티 클래스가 자신이 가진 값을 이용하는 간단한 Customizer 기능을 구현해서 사용되기도 함
+
+```java
+@ConfigurationProperties(prefix = "spring.transaction")
+public class TransactionProperties implements PlatformTransactionManagerCustomizer<AbstractPlatformTransactionManager> {
+```
