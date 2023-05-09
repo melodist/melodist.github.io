@@ -134,3 +134,4 @@ public RestTemplateBuilder restTemplateBuilder(RestTemplateBuilderConfigurer res
 @ConfigurationProperties(prefix = "spring.transaction")
 public class TransactionProperties implements PlatformTransactionManagerCustomizer<AbstractPlatformTransactionManager> {
 ```
+## 정리
