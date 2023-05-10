@@ -135,3 +135,8 @@ public RestTemplateBuilder restTemplateBuilder(RestTemplateBuilderConfigurer res
 public class TransactionProperties implements PlatformTransactionManagerCustomizer<AbstractPlatformTransactionManager> {
 ```
 ## 정리
+### 스프링 부트는
+- 스프링 프레임워크를 잘 쓰게 도와주는 도구의 모음
+- 서블릿 컨테이너와 관련된 모든 번거로운 작업을 감춰줌
+- 스프링과 각종 기술의 주요 인프라스트럭처 빈을 자동 구성을 이용해서 자동으로 등록
+- 외부 설정, 커스텀 빈 등록을 통해서 유연한 확장 가능
