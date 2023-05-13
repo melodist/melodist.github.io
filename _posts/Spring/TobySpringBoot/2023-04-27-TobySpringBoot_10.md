@@ -146,3 +146,15 @@ public class TransactionProperties implements PlatformTransactionManagerCustomiz
 - 구성 정보(configuration metadata)와 애플리케이션 기능을 담은 오브젝트가 결합되어 동작하는 애플리케이션
 - `@Configuration`, `@Bean`, `@Import`를 이용한 구성 정보
 - 메타 애노테이션, 합성 애노테이션 활용
+### 스프링 부트의 이해
+- 스프링 부트가 스프링의 기술을 어떻게 활용하는지 배우고 응용
+- 스프링 부트가 선택한 기술, 자동으로 만들어주는 구성, 디폴트 설정이 어떤 것인지 확인
+- 필요할 때 부트의 기본 구성을 수정하거나 확장
+- 나만의 스프링 부트 모듈을 만들어 활용
+### 스프링 부트 더 알아가기
+- 스프링 부트의 코어 (Profile, Logging, Testing...)
+- 핵심 기술 영역 (Web, Data, Messaging, I/O)
+- 운영환경의 모니터링, 관리 방법
+- 컨테이너, 배포, 빌드 툴
+- 스프링 부트 3.x
+- 스프링 프레임워크와 자바 표준, 오픈소스 기술
