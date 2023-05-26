@@ -3,7 +3,7 @@ layout: post
 title: 토비의 스프링 부트 - 이해와 원리 03. 독립 실행형 서블릿 애플리케이션
 tags: [Spring, TobySpringBoot]
 permalink: /docs/Spring/TobySpringBoot_3
-date: 2022-03-28 22:05:00
+date: 2023-03-28 22:05:00
 ---
 # 독립 실행형 서블릿 애플리케이션
 - 서블릿이란? 클라이언트의 요청을 처리하고, 그 결과를 반환하는 Servlet 클래스의 구현 규칙을 지킨 자바 웹 프로그래밍 기술
