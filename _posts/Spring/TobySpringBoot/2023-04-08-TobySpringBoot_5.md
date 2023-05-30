@@ -3,7 +3,7 @@ layout: post
 title: 토비의 스프링 부트 - 이해와 원리 05. DI와 테스트, 애노테이션 활용
 tags: [Spring, TobySpringBoot]
 permalink: /docs/Spring/TobySpringBoot_5
-date: 2022-04-08 12:21:00
+date: 2023-04-08 12:21:00
 ---
 # DI와 테스트, 애노테이션 활용
 ## 테스트 코드를 이용한 테스트
