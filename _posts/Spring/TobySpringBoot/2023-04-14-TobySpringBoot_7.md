@@ -3,7 +3,7 @@ layout: post
 title: 토비의 스프링 부트 - 이해와 원리 07. 조건부 자동 구성
 tags: [Spring, TobySpringBoot]
 permalink: /docs/Spring/TobySpringBoot_7
-date: 2022-04-14 22:36:00
+date: 2023-04-14 22:36:00
 ---
 # 조건부 자동 구성
 ## 스타터와 Jetty 서버 구성 추가
