@@ -3,7 +3,7 @@ layout: post
 title: 토비의 스프링 부트 - 이해와 원리 09. 스프링 JDBC 자동 구성 개발
 tags: [Spring, TobySpringBoot]
 permalink: /docs/Spring/TobySpringBoot_9
-date: 2022-04-24 23:02:00
+date: 2023-04-24 23:02:00
 ---
 # 스프링 JDBC 자동 구성 개발
 ## 자동 구성 클래스와 빈 설계
