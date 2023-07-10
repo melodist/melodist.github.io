@@ -3,7 +3,7 @@ layout: post
 title: 토비의 스프링 부트 - 이해와 원리 10. 스프링 부트 자세히 살펴보기
 tags: [Spring, TobySpringBoot]
 permalink: /docs/Spring/TobySpringBoot_10
-date: 2022-04-27 23:29:00
+date: 2023-04-27 23:29:00
 ---
 # 스프링 부트 자세히 살펴보기
 ## 스프링 부트의 자동 구성과 테스트로 전환
