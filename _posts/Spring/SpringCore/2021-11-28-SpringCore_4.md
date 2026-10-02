@@ -31,7 +31,7 @@ ApplicationContext applicationContext = new AnnotationConfigApplicationContext(A
 
 1. 스프링 컨테이너 생성
    
-   ![스프링 컨테이너 생성 - 01  스프링 컨테이너 생성](https://user-images.githubusercontent.com/52024566/144712799-99689ac7-e43d-494f-8c26-9ab45360d2dd.png)
+     ![스프링 컨테이너 생성 - 01  스프링 컨테이너 생성](https://user-images.githubusercontent.com/52024566/144712799-99689ac7-e43d-494f-8c26-9ab45360d2dd.png)
 - `new AnnotationConfigApplicationContext(AppConfig.class)`
 - 스프링 컨테이너를 생성할 때는 구성 정보를 지정해주어야 한다.
 - 여기서는 `AppConfig.class` 를 구성 정보로 지정했다.
