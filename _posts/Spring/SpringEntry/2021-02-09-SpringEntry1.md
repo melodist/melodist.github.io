@@ -59,6 +59,7 @@ public class HelloController {
 
 `resources/templates/hello.html`
 
+
 ```XML
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
