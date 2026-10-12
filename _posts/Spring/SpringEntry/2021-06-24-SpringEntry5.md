@@ -107,9 +107,9 @@ public String create(MemberForm form) {
 ```java
 @GetMapping(value = "/members")
 public String list(Model model) {
-	List<Member> members = memberService.findMembers();
-	model.addAttribute("members", members);
-	return "members/memberList";
+    List<Member> members = memberService.findMembers();
+    model.addAttribute("members", members);
+    return "members/memberList";
 }
 ```
 
