@@ -62,9 +62,9 @@ A와 B가 같지 않을 경우 오류 발생
 
 ```java
 memberRepository.findByName(member.getName())
-	.ifPresent(m -> {
-		throw new IllegalStateException("이미 존재하는 회원입니다.");
-	});
+    .ifPresent(m -> {
+        throw new IllegalStateException("이미 존재하는 회원입니다.");
+    });
 ```
 
 위의 예제에서는 m을 사용하지 않았지만 m은 `findByName()`에서 반환된 객체이다.
