@@ -17,6 +17,7 @@ date: 2021-10-15 23:30:00
 > 참고: 애자일 소프트웨어 개발 선언 https://agilemanifesto.org/iso/ko/manifesto.html
 
 순진 개발자가 정말 객체지향 설계 원칙을 잘 준수 했는지 확인해보자. 이번에는 주문한 금액의 %를 할인해주는 새로운 정률 할인 정책을 추가하자.
+
 **RateDiscountPolicy 추가**
 
 ![스프링 핵심 원리 이해2 - 01  RateDiscountPolicy 추가](https://user-images.githubusercontent.com/52024566/139690965-cda2aa44-0af6-4ba8-b163-7bcb373b5fe7.png)**RateDiscountPolicy 코드 추가**
