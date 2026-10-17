@@ -136,14 +136,9 @@ public class OrderServiceImpl implements OrderService {
 ### 어떻게 문제를 해결할 수 있을까?
 
 - 클라이언트 코드인 `OrderServiceImpl` 은 `DiscountPolicy` 의 인터페이스 뿐만 아니라 구체 클래스도 함께 의존한다.
-
 - 그래서 구체 클래스를 변경할 때 클라이언트 코드도 함께 변경해야 한다.
-
 - **DIP 위반** :arrow_right: 추상에만 의존하도록 변경(인터페이스에만 의존)
-
 - DIP를 위반하지 않도록 인터페이스에만 의존하도록 의존관계를 변경하면 된다.
-
-  
 
   **인터페이스에만 의존하도록 설계를 변경하자**
 
