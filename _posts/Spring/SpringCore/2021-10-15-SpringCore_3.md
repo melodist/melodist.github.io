@@ -392,9 +392,6 @@ class OrderServiceTest {
 - 이제 각 배우들은 담당 기능을 실행하는 책임만 지면 된다.
 - `OrderServiceImpl` 은 기능을 실행하는 책임만 지면 된다.
 
-
-
-
 ## AppConfig 리팩터링
 
 현재 AppConfig를 보면 중복이 있고, 역할에 따른 구현이 잘 안보인다.
