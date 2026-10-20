@@ -161,7 +161,7 @@ public class OrderServiceImpl implements OrderService {
 
 - 이 문제를 해결하려면 누군가가 클라이언트인 `OrderServiceImpl` 에 `DiscountPolicy` 의 구현 객체를 대신 생성하고 주입해주어야 한다.
 
-  ## 관심사의 분리
+## 관심사의 분리
 
 - 애플리케이션을 하나의 공연이라 생각해보자. 각각의 인터페이스를 배역(배우 역할)이라 생각하자. 그런데! 실제 배역 맞는 배우를 선택하는 것은 누가 하는가?
 
