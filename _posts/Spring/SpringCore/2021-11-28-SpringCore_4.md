@@ -50,7 +50,7 @@ ApplicationContext applicationContext = new AnnotationConfigApplicationContext(A
 
 3. 스프링 빈 의존관계 설정 - 준비
 
-![스프링 컨테이너 생성 - 03  스프링 빈 의존관계 설정 - 준비](https://user-images.githubusercontent.com/52024566/144712804-b8356e60-5d45-4480-bd44-cc825b372513.png)
+  ![스프링 컨테이너 생성 - 03  스프링 빈 의존관계 설정 - 준비](https://user-images.githubusercontent.com/52024566/144712804-b8356e60-5d45-4480-bd44-cc825b372513.png)
 
 4. 스프링 빈 의존관계 설정 - 완료
 
