@@ -40,7 +40,7 @@ ApplicationContext applicationContext = new AnnotationConfigApplicationContext(A
    ![스프링 컨테이너 생성 - 02  스프링 빈 등록](https://user-images.githubusercontent.com/52024566/144712801-ba4c9878-96d3-46fa-b376-97926fc1e678.png)
 - 스프링 컨테이너는 파라미터로 넘어온 설정 클래스 정보를 사용해서 스프링 빈을 등록한다.
 
-**빈 이름**
+  **빈 이름**
 
 - 빈 이름은 메서드 이름을 사용한다.
 - 빈 이름을 직접 부여할 수 도 있다.
