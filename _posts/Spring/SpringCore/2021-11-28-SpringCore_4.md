@@ -53,11 +53,10 @@ ApplicationContext applicationContext = new AnnotationConfigApplicationContext(A
      ![스프링 컨테이너 생성 - 03  스프링 빈 의존관계 설정 - 준비](https://user-images.githubusercontent.com/52024566/144712804-b8356e60-5d45-4480-bd44-cc825b372513.png)
 
 4. 스프링 빈 의존관계 설정 - 완료
+    ![스프링 컨테이너 생성 - 04  스프링 빈 의존관계 설정 - 완료](https://user-images.githubusercontent.com/52024566/144712805-91398105-84d2-49b0-ae5e-ad08e8a95473.png)
 
-![스프링 컨테이너 생성 - 04  스프링 빈 의존관계 설정 - 완료](https://user-images.githubusercontent.com/52024566/144712805-91398105-84d2-49b0-ae5e-ad08e8a95473.png)
-
-- 스프링 컨테이너는 설정 정보를 참고해서 의존관계를 주입(DI)한다.
-- 단순히 자바 코드를 호출하는 것 같지만, 차이가 있다. 이 차이는 뒤에 싱글톤 컨테이너에서 설명한다.
+    - 스프링 컨테이너는 설정 정보를 참고해서 의존관계를 주입(DI)한다.
+    - 단순히 자바 코드를 호출하는 것 같지만, 차이가 있다. 이 차이는 뒤에 싱글톤 컨테이너에서 설명한다.
 
 **참고**
 
