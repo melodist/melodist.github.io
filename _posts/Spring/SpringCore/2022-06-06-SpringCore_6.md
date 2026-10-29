@@ -81,12 +81,12 @@ ClassPathBeanDefinitionScanner - Identified candidate component class:
 
 1. @ComponentScan
 
-![컴포넌트 스캔 - 01  컴포넌트 스캔과 의존관계 자동 주입 시작하기](https://user-images.githubusercontent.com/52024566/172179004-4c54a2e1-7f62-4de1-8c8e-b78b69f1420f.png)
+    ![컴포넌트 스캔 - 01  컴포넌트 스캔과 의존관계 자동 주입 시작하기](https://user-images.githubusercontent.com/52024566/172179004-4c54a2e1-7f62-4de1-8c8e-b78b69f1420f.png)
 
-- `@ComponentScan`은 `@Component`가 붙은 모든 클래스를 스프링 빈으로 등록
-- 이 때 스프링 빈의 기본 이름은 클래스명을 사용하되 맨 앞글자만 소문자를 사용
-  - 빈 이름 기본 전략: `MemberServiceImpl` 클래스 → `memberServiceImpl`
-  - 빈 이름 직접 지정: 만약 스프링 빈의 이름을 직접 지정하고 싶으면
+    - `@ComponentScan`은 `@Component`가 붙은 모든 클래스를 스프링 빈으로 등록
+    - 이 때 스프링 빈의 기본 이름은 클래스명을 사용하되 맨 앞글자만 소문자를 사용
+      - 빈 이름 기본 전략: `MemberServiceImpl` 클래스 → `memberServiceImpl`
+      - 빈 이름 직접 지정: 만약 스프링 빈의 이름을 직접 지정하고 싶으면
 `@Component("memberService2")` 이런 식으로 이름을 부여
 
 2. @Autowired 의존관계 자동 주입
