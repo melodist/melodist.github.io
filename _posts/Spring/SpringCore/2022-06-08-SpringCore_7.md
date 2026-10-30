@@ -647,7 +647,7 @@ public class AllBeanTest {
 스프링 컨테이너는 생성자에 클래스 정보를 받음. 여기에 클래스 정보를 넘기면 해당 클래스가 스프링 빈으로 자동 등록
 `new AnnotationConfigApplicationContext(AutoAppConfig.class,DiscountService.class);`
 
-이 코드는 2가지로 나누어 이해할 수 있음\
+이 코드는 2가지로 나누어 이해할 수 있음
 - `new AnnotationConfigApplicationContext()`를 통해 스프링 컨테이너를 생성
 - `AutoAppConfig.class`, `DiscountService.class`를 파라미터로 넘기면서 해당 클래스를 자동으로 스프링 빈으로 등록
 정리하면 스프링 컨테이너를 생성하면서, 해당 컨테이너에 동시에 `AutoAppConfig`, `DiscountService`를 스프링 빈으로 자동 등록
